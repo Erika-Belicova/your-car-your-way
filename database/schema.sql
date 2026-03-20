@@ -34,7 +34,7 @@ CREATE TABLE "users" (
   "first_name" VARCHAR(100) NOT NULL,
   "last_name" VARCHAR(100) NOT NULL,
   "date_of_birth" DATE NOT NULL,
-  "address" VARCHAR(255),
+  "address" VARCHAR(255) NOT NULL,
   "language" VARCHAR(10) NOT NULL DEFAULT 'en',
   "auth_provider" VARCHAR(50),
   "external_auth_id" VARCHAR(255),
@@ -105,7 +105,7 @@ CREATE TABLE "offers" (
   "rate" DECIMAL(10,2) NOT NULL,
   "departure_city" VARCHAR(100) NOT NULL,
   "return_city" VARCHAR(100) NOT NULL,
-  "cancellation_policy" TEXT,
+  "cancellation_policy" TEXT NOT NULL,
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
 );
