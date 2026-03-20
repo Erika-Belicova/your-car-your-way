@@ -42,6 +42,7 @@ CREATE TABLE "users" (
   "privacy_accepted_at" TIMESTAMPTZ NOT NULL,
   "stripe_customer_id" VARCHAR(255),
   "is_active" BOOLEAN NOT NULL DEFAULT true,
+  "support_access" BOOLEAN NOT NULL DEFAULT false,
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT (now()),
   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT (now())
 );
