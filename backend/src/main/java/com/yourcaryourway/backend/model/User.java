@@ -72,7 +72,8 @@ public class User {
     private Boolean supportAccess = false;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SupportConversation> supportConversations = new ArrayList<>(); // support conversations belonging to this user
+    // support conversations belonging to this user
+    private List<SupportConversation> supportConversations = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
