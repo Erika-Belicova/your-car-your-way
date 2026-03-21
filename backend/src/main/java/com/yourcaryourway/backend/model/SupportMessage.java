@@ -36,7 +36,8 @@ public class SupportMessage {
 
     @ManyToOne
     @JoinColumn(name = "conversation_id", nullable = false)
-    private SupportConversation supportConversation; // support conversation that this support message belongs to
+    // support conversation that this support message belongs to
+    private SupportConversation supportConversation;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -42,7 +42,8 @@ public class SupportConversation {
     private User user; // user initiating the support conversation
 
     @OneToMany(mappedBy = "supportConversation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SupportMessage> supportMessages = new ArrayList<>(); // support messages belonging to this support conversation
+    // support messages belonging to this support conversation
+    private List<SupportMessage> supportMessages = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
