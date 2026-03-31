@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Custom implementation of Spring Security's UserDetails,
  * representing authenticated user information based on the application's User model.
- * Returns ROLE_USER or ROLE_SUPPORT based on the user's support access flag.
+ * Returns ROLE_USER or ROLE_SUPPORT_AGENT based on the user's support access flag.
  */
 public class CustomUserDetails implements UserDetails {
 
@@ -30,7 +30,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public String getRole() {
-        return supportAccess ? "ROLE_SUPPORT" : "ROLE_USER";
+        return supportAccess ? "ROLE_SUPPORT_AGENT" : "ROLE_USER";
     }
 
     @Override

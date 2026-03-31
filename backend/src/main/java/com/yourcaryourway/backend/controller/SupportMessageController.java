@@ -1,6 +1,6 @@
 package com.yourcaryourway.backend.controller;
 
-import com.yourcaryourway.backend.dto.support.SupportMessageDTO;
+import com.yourcaryourway.backend.dto.support.message.SupportMessageResponseDTO;
 import com.yourcaryourway.backend.service.SupportMessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,7 +38,7 @@ public class SupportMessageController {
             @ApiResponse(responseCode = "401", description = "Unauthorized access")
     })
     @GetMapping("/{id}/messages")
-    public ResponseEntity<List<SupportMessageDTO>> getMessagesByConversationId(@PathVariable("id") Long id) {
+    public ResponseEntity<List<SupportMessageResponseDTO>> getMessagesByConversationId(@PathVariable("id") Long id) {
         return ResponseEntity.ok(supportMessageService.getMessagesByConversationId(id));
     }
 

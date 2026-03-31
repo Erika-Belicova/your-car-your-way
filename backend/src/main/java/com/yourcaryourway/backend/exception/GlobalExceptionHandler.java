@@ -32,4 +32,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(exception.getMessage()));
     }
 
+    @ExceptionHandler(ConversationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleConversationNotFoundException(ConversationNotFoundException exception) {
+        logger.error("ConversationNotFoundException: ", exception);
+        // 404 conversation not found
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException exception) {
+        logger.error("UserNotFoundException: ", exception);
+        // 404 user not found
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
+    }
+
 }
