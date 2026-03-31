@@ -40,7 +40,7 @@ public class SupportConversationMapper {
     }
 
     // convert a list of SupportConversation entities to a list of SupportConversationResponseDTOs
-    public List<SupportConversationResponseDTO> toSupportConversationResponseDTOList(List<SupportConversation> conversations) {
+    public List<SupportConversationResponseDTO> toSupportConversationList(List<SupportConversation> conversations) {
         return conversations.stream()
                 .map(this::toSupportConversationResponseDTO)
                 .collect(Collectors.toList());
