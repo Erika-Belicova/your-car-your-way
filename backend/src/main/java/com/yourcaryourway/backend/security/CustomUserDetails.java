@@ -29,11 +29,14 @@ public class CustomUserDetails implements UserDetails {
         this.supportAccess = user.getSupportAccess();
     }
 
+    public String getRole() {
+        return supportAccess ? "ROLE_SUPPORT" : "ROLE_USER";
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // return role based on support access flag
-        String role = supportAccess ? "ROLE_SUPPORT" : "ROLE_USER";
-        return List.of(new SimpleGrantedAuthority(role));
+        return List.of(new SimpleGrantedAuthority(getRole()));
     }
 
     @Override
