@@ -1,6 +1,6 @@
 package com.yourcaryourway.backend.service;
 
-import com.yourcaryourway.backend.dto.support.SupportMessageDTO;
+import com.yourcaryourway.backend.dto.support.message.SupportMessageResponseDTO;
 import com.yourcaryourway.backend.mapper.SupportMessageMapper;
 import com.yourcaryourway.backend.model.SupportMessage;
 import com.yourcaryourway.backend.repository.SupportMessageRepository;
@@ -25,7 +25,7 @@ public class SupportMessageService {
     }
 
     @Transactional(readOnly = true)
-    public List<SupportMessageDTO> getMessagesByConversationId(Long conversationId) {
+    public List<SupportMessageResponseDTO> getMessagesByConversationId(Long conversationId) {
         // fetch all messages for the given support conversation
         List<SupportMessage> messages = supportMessageRepository
                 .findBySupportConversationId(conversationId);

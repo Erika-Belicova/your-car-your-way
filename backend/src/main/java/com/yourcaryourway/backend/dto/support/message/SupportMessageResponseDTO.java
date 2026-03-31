@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.dto.support;
+package com.yourcaryourway.backend.dto.support.message;
 
 import com.yourcaryourway.backend.enumeration.SenderType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
  * DTO representing a support message.
  */
 @Data
-public class SupportMessageDTO {
+public class SupportMessageResponseDTO {
 
     @Schema(description = "Unique identifier of the message", example = "1")
     private Long id;
