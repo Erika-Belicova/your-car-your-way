@@ -30,7 +30,7 @@ import java.util.List;
  * defines public and secured endpoints, and configures password encoding.
  * Disables CSRF protection for stateless REST APIs.
  * Configures stateless session management.
- * Permits access to login and Swagger endpoints.
+ * Permits access to login, token refresh and Swagger endpoints.
  * Secures all other endpoints requiring authentication.
  * Provides beans for JWT encoding/decoding, role extraction, and password hashing.
  */
@@ -55,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers( // match publicly accessible endpoints
                                 "/",
                                 "/api/auth/login",
+                                "/api/auth/refresh", // renews access token from refresh token
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",

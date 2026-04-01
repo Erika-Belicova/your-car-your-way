@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.dto.user;
+package com.yourcaryourway.backend.dto.authentication;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
