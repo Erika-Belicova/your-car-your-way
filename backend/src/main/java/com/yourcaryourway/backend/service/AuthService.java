@@ -1,6 +1,7 @@
 package com.yourcaryourway.backend.service;
 
-import com.yourcaryourway.backend.dto.user.LoginRequestDTO;
+import com.yourcaryourway.backend.dto.authentication.LoginRequestDTO;
+import com.yourcaryourway.backend.dto.authentication.RefreshTokenRequestDTO;
 import com.yourcaryourway.backend.response.AuthResponse;
 import com.yourcaryourway.backend.security.JWTService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 /**
  * Service responsible for handling user authentication.
  * Validates credentials and returns JWT access and refresh tokens.
+ * Handles refresh token validation and access token renewal.
  */
 @Service
 public class AuthService {
@@ -37,6 +39,15 @@ public class AuthService {
         String refreshToken = jwtService.generateRefreshToken(authentication);
 
         return new AuthResponse(accessToken, refreshToken);
+    }
+
+    public AuthResponse refresh(RefreshTokenRequestDTO refreshTokenRequest) {
+        // generate new access token from the provided refresh token
+        String newAccessToken = jwtService.generateAccessTokenFromRefreshToken(
+                refreshTokenRequest.getRefreshToken());
+
+        // return new access token with the same refresh token
+        return new AuthResponse(newAccessToken, refreshTokenRequest.getRefreshToken());
     }
 
 }

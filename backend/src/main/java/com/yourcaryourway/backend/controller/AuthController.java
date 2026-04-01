@@ -1,6 +1,7 @@
 package com.yourcaryourway.backend.controller;
 
-import com.yourcaryourway.backend.dto.user.LoginRequestDTO;
+import com.yourcaryourway.backend.dto.authentication.LoginRequestDTO;
+import com.yourcaryourway.backend.dto.authentication.RefreshTokenRequestDTO;
 import com.yourcaryourway.backend.response.AuthResponse;
 import com.yourcaryourway.backend.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller for user authentication.
  * Login endpoint authenticates a user by email and password,
  * returning JWT access and refresh tokens.
+ * Refresh endpoint validates a refresh token and returns a new access token.
  */
 @Tag(name = "Authentication", description = "Endpoint for user authentication")
 @RestController
@@ -38,6 +40,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequestDTO loginRequestDTO) {
         return ResponseEntity.ok(authService.login(loginRequestDTO));
+    }
+
+    @Operation(summary = "Refresh access token", description = "Validates the refresh token and returns a new access token.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Access token refreshed successfully"),
+            @ApiResponse(responseCode = "401", description = "Invalid or expired refresh token")
+    })
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@RequestBody @Valid RefreshTokenRequestDTO refreshTokenRequest) {
+        return ResponseEntity.ok(authService.refresh(refreshTokenRequest));
     }
 
 }

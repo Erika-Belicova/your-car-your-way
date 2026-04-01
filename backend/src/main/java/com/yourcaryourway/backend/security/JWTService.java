@@ -2,44 +2,63 @@ package com.yourcaryourway.backend.security;
 
 import com.yourcaryourway.backend.configuration.JwtProperties;
 import com.yourcaryourway.backend.exception.JwtGenerationException;
+import com.yourcaryourway.backend.exception.JwtValidationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwsHeader;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
 /**
- * Service responsible for generating JWT access and refresh tokens
+ * Service responsible for generating and validating JWT access and refresh tokens
  * signed with HS256 and including the user's role.
  */
 @Service
 public class JWTService {
 
     private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
     private final JwtProperties jwtProperties;
 
-    public JWTService(JwtEncoder jwtEncoder, JwtProperties jwtProperties) {
+    public JWTService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder,
+                      JwtProperties jwtProperties) {
         this.jwtEncoder = jwtEncoder;
+        this.jwtDecoder = jwtDecoder;
         this.jwtProperties = jwtProperties;
     }
 
     public String generateAccessToken(Authentication authentication) {
-        return generateToken(authentication, jwtProperties.getAccessTokenDuration());
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        // build and encode a new access token with the given parameters
+        return buildAndEncode(authentication.getName(),
+                userDetails.getRole(), // extract role from the user
+                jwtProperties.getAccessTokenDuration());
     }
 
     public String generateRefreshToken(Authentication authentication) {
-        return generateToken(authentication, jwtProperties.getRefreshTokenDuration());
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        // build and encode a new refresh token with the given parameters
+        return buildAndEncode(authentication.getName(),
+                userDetails.getRole(), // extract role from the user
+                jwtProperties.getRefreshTokenDuration());
     }
 
-    private String generateToken(Authentication authentication, long duration) {
+    public String generateAccessTokenFromRefreshToken(String refreshToken) {
+        Jwt jwt;
+        try {
+            jwt = jwtDecoder.decode(refreshToken); // decode and validate the refresh token
+        } catch (Exception e) {
+            throw new JwtValidationException("Invalid or expired refresh token");
+        }
+        // extract subject and role from the refresh token to build the new token
+        return buildAndEncode(jwt.getSubject(), jwt.getClaimAsString("role"),
+                jwtProperties.getAccessTokenDuration());
+    }
+
+    // build and encode a signed JWT token with the given subject, role and duration
+    private String buildAndEncode(String subject, String role, long duration) {
         Instant now = Instant.now();
-        String subject = authentication.getName();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String role = userDetails.getRole(); // extract role from the user
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -54,11 +73,10 @@ public class JWTService {
                 .from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
 
         try {
-            return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
-        }
-        catch (Exception e) {
+            // encode the claims into a signed JWT string
+            return jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+        } catch (Exception e) {
             throw new JwtGenerationException("Token generation failed. Please try again later.");
         }
     }
-
 }
