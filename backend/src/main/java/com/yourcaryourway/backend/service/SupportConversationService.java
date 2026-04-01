@@ -4,12 +4,15 @@ import com.yourcaryourway.backend.dto.support.conversation.SupportConversationDe
 import com.yourcaryourway.backend.dto.support.conversation.SupportConversationRequestDTO;
 import com.yourcaryourway.backend.dto.support.conversation.SupportConversationResponseDTO;
 import com.yourcaryourway.backend.enumeration.ConversationStatus;
+import com.yourcaryourway.backend.enumeration.SenderType;
 import com.yourcaryourway.backend.exception.ConversationNotFoundException;
 import com.yourcaryourway.backend.exception.UserNotFoundException;
 import com.yourcaryourway.backend.mapper.SupportConversationMapper;
 import com.yourcaryourway.backend.model.SupportConversation;
+import com.yourcaryourway.backend.model.SupportMessage;
 import com.yourcaryourway.backend.model.User;
 import com.yourcaryourway.backend.repository.SupportConversationRepository;
+import com.yourcaryourway.backend.repository.SupportMessageRepository;
 import com.yourcaryourway.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +29,16 @@ public class SupportConversationService {
 
     private final SupportConversationRepository supportConversationRepository;
     private final UserRepository userRepository;
+    private final SupportMessageRepository supportMessageRepository;
     private final SupportConversationMapper supportConversationMapper;
 
     public SupportConversationService(SupportConversationRepository supportConversationRepository,
                                       UserRepository userRepository,
+                                      SupportMessageRepository supportMessageRepository,
                                       SupportConversationMapper supportConversationMapper) {
         this.supportConversationRepository = supportConversationRepository;
         this.userRepository = userRepository;
+        this.supportMessageRepository = supportMessageRepository;
         this.supportConversationMapper = supportConversationMapper;
     }
 
@@ -42,15 +48,19 @@ public class SupportConversationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        // map request DTO to entity and set user
+        // map request DTO to entity and set user and chat session ID
         SupportConversation conversation = supportConversationMapper.toSupportConversationEntity(requestDTO);
         conversation.setUser(user);
-        // only assign a chat session ID if this is a live chat conversation
-        if (Boolean.TRUE.equals(requestDTO.getIsChatSession())) {
-            conversation.setChatSessionId(UUID.randomUUID());
-        }
-
+        conversation.setChatSessionId(UUID.randomUUID()); // assign a chat session ID
         SupportConversation saved = supportConversationRepository.save(conversation);
+
+        // create and save the initial message
+        SupportMessage initialMessage = new SupportMessage();
+        initialMessage.setSupportConversation(saved);
+        initialMessage.setContent(requestDTO.getMessageContent());
+        initialMessage.setSenderType(SenderType.USER); // first message is always from the user
+        supportMessageRepository.save(initialMessage);
+
         return supportConversationMapper.toSupportConversationResponseDTO(saved);
     }
 

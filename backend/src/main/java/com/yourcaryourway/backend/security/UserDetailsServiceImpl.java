@@ -11,8 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Service implementation for loading user-specific data.
  * Loads user details by email for authentication purposes.
- * Throws UsernameNotFoundException if the user does not exist,
- * or if the user registered via an external provider.
+ * Throws UsernameNotFoundException if the user does not exist.
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -29,12 +28,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // find user by email, throw if not found
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        // no password login for OAuth users
-        if (user.getAuthProvider() != null && user.getPassword() == null) {
-            throw new UsernameNotFoundException("Please login via " + user.getAuthProvider());
-        }
-
         return new CustomUserDetails(user);
     }
 
