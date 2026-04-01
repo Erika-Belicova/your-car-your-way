@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.configuration;
+package com.yourcaryourway.backend.configuration.app;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.configuration;
+package com.yourcaryourway.backend.configuration.app;
 
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;

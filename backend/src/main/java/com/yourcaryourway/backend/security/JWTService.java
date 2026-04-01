@@ -1,6 +1,6 @@
 package com.yourcaryourway.backend.security;
 
-import com.yourcaryourway.backend.configuration.JwtProperties;
+import com.yourcaryourway.backend.configuration.security.JwtProperties;
 import com.yourcaryourway.backend.exception.JwtGenerationException;
 import com.yourcaryourway.backend.exception.JwtValidationException;
 import org.springframework.security.core.Authentication;
