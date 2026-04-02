@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.configuration;
+package com.yourcaryourway.backend.configuration.app;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

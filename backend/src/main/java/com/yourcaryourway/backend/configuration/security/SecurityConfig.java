@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.configuration;
+package com.yourcaryourway.backend.configuration.security;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.context.annotation.Bean;
