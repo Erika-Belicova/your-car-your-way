@@ -33,13 +33,11 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
     public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(
                 message, StompHeaderAccessor.class);
-
         // authenticate the user when they first connect to the WebSocket
         if (isConnectFrame(accessor)) {
             String token = extractToken(accessor);
             authenticateSession(accessor, token);
         }
-
         return message;
     }
 
