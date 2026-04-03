@@ -14,6 +14,7 @@ import com.yourcaryourway.backend.model.User;
 import com.yourcaryourway.backend.repository.SupportConversationRepository;
 import com.yourcaryourway.backend.repository.SupportMessageRepository;
 import com.yourcaryourway.backend.repository.UserRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import java.util.UUID;
 /**
  * Service for managing support conversations.
  * Handles creation, retrieval and status updates of support conversations.
+ * Triggers WebSocket notifications via ChatNotificationService on status changes.
  */
 @Service
 public class SupportConversationService {
@@ -31,15 +33,18 @@ public class SupportConversationService {
     private final UserRepository userRepository;
     private final SupportMessageRepository supportMessageRepository;
     private final SupportConversationMapper supportConversationMapper;
+    private final ChatNotificationService chatNotificationService;
 
     public SupportConversationService(SupportConversationRepository supportConversationRepository,
                                       UserRepository userRepository,
                                       SupportMessageRepository supportMessageRepository,
-                                      SupportConversationMapper supportConversationMapper) {
+                                      SupportConversationMapper supportConversationMapper,
+                                      ChatNotificationService chatNotificationService) {
         this.supportConversationRepository = supportConversationRepository;
         this.userRepository = userRepository;
         this.supportMessageRepository = supportMessageRepository;
         this.supportConversationMapper = supportConversationMapper;
+        this.chatNotificationService = chatNotificationService;
     }
 
     @Transactional
@@ -92,15 +97,24 @@ public class SupportConversationService {
         return supportConversationMapper.toSupportConversationDetailDTO(conversation);
     }
 
+    // update conversation status via REST - used for manual dropdown status changes
     @Transactional
-    public SupportConversationResponseDTO updateConversationStatus(Long id, ConversationStatus status) {
+    public SupportConversationResponseDTO updateConversationStatus(Long id, ConversationStatus status,
+                                                                   Authentication authentication) {
         // fetch conversation or throw if not found
         SupportConversation conversation = supportConversationRepository.findById(id)
                 .orElseThrow(() -> new ConversationNotFoundException("Support conversation not found"));
 
-        // update the status
+        // capture previous status before updating
+        ConversationStatus previousStatus = conversation.getStatus();
         conversation.setStatus(status);
         SupportConversation saved = supportConversationRepository.save(conversation);
+
+        // broadcast notification for chat conversation
+        if (conversation.getChatSessionId() != null) {
+            chatNotificationService.broadcastStatusNotification(
+                    conversation.getChatSessionId(), previousStatus, status, authentication);
+        }
         return supportConversationMapper.toSupportConversationResponseDTO(saved);
     }
 
