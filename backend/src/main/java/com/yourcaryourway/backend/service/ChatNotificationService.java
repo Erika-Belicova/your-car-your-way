@@ -62,4 +62,12 @@ public class ChatNotificationService {
                 .contains(new SimpleGrantedAuthority("ROLE_SUPPORT_AGENT"));
     }
 
+    // broadcast a system notification to all participants without a status change
+    public void broadcastSystemNotification(UUID chatSessionId, String notificationMessage) {
+        ChatNotificationDTO notification = new ChatNotificationDTO();
+        notification.setChatSessionId(chatSessionId);
+        notification.setNotificationMessage(notificationMessage);
+        messagingTemplate.convertAndSend("/topic/chat/" + chatSessionId, notification);
+    }
+
 }
