@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * Controller for managing support conversations.
- * Handles creation, retrieval and status updates.
+ * Handles creation, retrieval, status updates and triggers WebSocket notifications.
  * Access is restricted based on user roles.
  */
 @Tag(name = "Support Conversations", description = "Endpoints for managing support conversations")
@@ -99,8 +99,9 @@ public class SupportConversationController {
     @PreAuthorize("hasRole('SUPPORT_AGENT')")
     public ResponseEntity<SupportConversationResponseDTO> updateConversationStatus(
             @PathVariable("id") Long id,
-            @RequestParam ConversationStatus status) { // status passed as query parameter
-        return ResponseEntity.ok(supportConversationService.updateConversationStatus(id, status));
+            @RequestParam ConversationStatus status, // status passed as query parameter
+            Authentication authentication) {
+        return ResponseEntity.ok(supportConversationService.updateConversationStatus(id, status, authentication));
     }
 
 }

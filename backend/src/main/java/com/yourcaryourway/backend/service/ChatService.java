@@ -2,6 +2,8 @@ package com.yourcaryourway.backend.service;
 
 import com.yourcaryourway.backend.dto.websocket.ChatMessageRequestDTO;
 import com.yourcaryourway.backend.dto.websocket.ChatMessageResponseDTO;
+import com.yourcaryourway.backend.dto.websocket.ChatStatusUpdateDTO;
+import com.yourcaryourway.backend.enumeration.ConversationStatus;
 import com.yourcaryourway.backend.enumeration.SenderType;
 import com.yourcaryourway.backend.exception.ConversationNotFoundException;
 import com.yourcaryourway.backend.mapper.SupportMessageMapper;
@@ -18,8 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 /**
- * Service for handling real-time chat messages over WebSocket.
- * Persists messages to the database and broadcasts them to conversation participants.
+ * Service for handling real-time chat messages and conversation status updates over WebSocket.
+ * Persists messages to the database, broadcasts messages and status change notifications
+ * to conversation participants.
  */
 @Service
 public class ChatService {
@@ -28,15 +31,18 @@ public class ChatService {
     private final SupportMessageRepository supportMessageRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final SupportMessageMapper supportMessageMapper;
+    private final ChatNotificationService chatNotificationService;
 
     public ChatService(SupportConversationRepository supportConversationRepository,
                        SupportMessageRepository supportMessageRepository,
                        SimpMessagingTemplate messagingTemplate,
-                       SupportMessageMapper supportMessageMapper) {
+                       SupportMessageMapper supportMessageMapper,
+                       ChatNotificationService chatNotificationService) {
         this.supportConversationRepository = supportConversationRepository;
         this.supportMessageRepository = supportMessageRepository;
         this.messagingTemplate = messagingTemplate;
         this.supportMessageMapper = supportMessageMapper;
+        this.chatNotificationService = chatNotificationService;
     }
 
     @Transactional
@@ -76,6 +82,24 @@ public class ChatService {
     private void broadcastMessage(SupportMessage saved, UUID chatSessionId) {
         ChatMessageResponseDTO responseDTO = supportMessageMapper.toChatMessageResponseDTO(saved);
         messagingTemplate.convertAndSend("/topic/chat/" + chatSessionId, responseDTO);
+    }
+
+    // update conversation status via WebSocket - used for real-time status changes during active chat
+    @Transactional
+    public void updateStatus(ChatStatusUpdateDTO statusUpdateDTO, Authentication authentication) {
+        // extract data from DTO
+        UUID chatSessionId = statusUpdateDTO.getChatSessionId();
+        ConversationStatus newStatus = statusUpdateDTO.getStatus();
+
+        // fetch conversation and capture previous status before updating
+        SupportConversation conversation = fetchConversation(chatSessionId);
+        ConversationStatus previousStatus = conversation.getStatus();
+        conversation.setStatus(newStatus);
+        supportConversationRepository.save(conversation);
+
+        // broadcast status change notification to all participants
+        chatNotificationService.broadcastStatusNotification(
+                chatSessionId, previousStatus, newStatus, authentication);
     }
 
 }
