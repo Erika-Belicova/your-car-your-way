@@ -1,10 +1,11 @@
-package com.yourcaryourway.backend.service;
+package com.yourcaryourway.backend.service.chat;
 
 import com.yourcaryourway.backend.dto.websocket.ChatMessageRequestDTO;
 import com.yourcaryourway.backend.dto.websocket.ChatMessageResponseDTO;
 import com.yourcaryourway.backend.dto.websocket.ChatStatusUpdateDTO;
 import com.yourcaryourway.backend.enumeration.ConversationStatus;
 import com.yourcaryourway.backend.enumeration.SenderType;
+import com.yourcaryourway.backend.exception.ConversationNotActiveException;
 import com.yourcaryourway.backend.exception.ConversationNotFoundException;
 import com.yourcaryourway.backend.mapper.SupportMessageMapper;
 import com.yourcaryourway.backend.model.SupportConversation;
@@ -22,7 +23,7 @@ import java.util.UUID;
 /**
  * Service for handling real-time chat messages and conversation status updates over WebSocket.
  * Persists messages to the database, broadcasts messages and status change notifications
- * to conversation participants.
+ * to conversation participants. Triggers timeout scheduling on status changes.
  */
 @Service
 public class ChatService {
@@ -31,25 +32,28 @@ public class ChatService {
     private final SupportMessageRepository supportMessageRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final SupportMessageMapper supportMessageMapper;
-    private final ChatNotificationService chatNotificationService;
+    private final ChatTimeoutScheduler chatTimeoutScheduler;
 
     public ChatService(SupportConversationRepository supportConversationRepository,
                        SupportMessageRepository supportMessageRepository,
                        SimpMessagingTemplate messagingTemplate,
                        SupportMessageMapper supportMessageMapper,
-                       ChatNotificationService chatNotificationService) {
+                       ChatTimeoutScheduler chatTimeoutScheduler) {
         this.supportConversationRepository = supportConversationRepository;
         this.supportMessageRepository = supportMessageRepository;
         this.messagingTemplate = messagingTemplate;
         this.supportMessageMapper = supportMessageMapper;
-        this.chatNotificationService = chatNotificationService;
+        this.chatTimeoutScheduler = chatTimeoutScheduler;
     }
 
     @Transactional
     public void sendMessage(ChatMessageRequestDTO requestDTO, Authentication authentication) {
-        SupportMessage saved = persistMessage(
-                fetchConversation(requestDTO.getChatSessionId()),
-                requestDTO.getContent(),
+        SupportConversation conversation = fetchConversation(requestDTO.getChatSessionId());
+        // only allow messages when conversation is active
+        if (conversation.getStatus() != ConversationStatus.ACTIVE) {
+            throw new ConversationNotActiveException("Messages can only be sent to active conversations");
+        }
+        SupportMessage saved = persistMessage(conversation, requestDTO.getContent(),
                 determineSenderType(authentication));
         broadcastMessage(saved, requestDTO.getChatSessionId());
     }
@@ -97,9 +101,8 @@ public class ChatService {
         conversation.setStatus(newStatus);
         supportConversationRepository.save(conversation);
 
-        // broadcast status change notification to all participants
-        chatNotificationService.broadcastStatusNotification(
-                chatSessionId, previousStatus, newStatus, authentication);
+        // handle notifications and timeout scheduling after a status update
+        chatTimeoutScheduler.handlePostStatusUpdate(chatSessionId, previousStatus, newStatus, authentication);
     }
 
 }

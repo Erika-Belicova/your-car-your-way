@@ -39,6 +39,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(exception.getMessage()));
     }
 
+    @ExceptionHandler(ConversationNotActiveException.class)
+    public ResponseEntity<ErrorResponse> handleConversationNotActiveException(ConversationNotActiveException exception) {
+        logger.error("ConversationNotActiveException: ", exception);
+        // 400 conversation is not active
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
+    }
+
     @ExceptionHandler(ConversationNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleConversationNotFoundException(ConversationNotFoundException exception) {
         logger.error("ConversationNotFoundException: ", exception);

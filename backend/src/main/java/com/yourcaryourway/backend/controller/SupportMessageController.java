@@ -1,7 +1,7 @@
 package com.yourcaryourway.backend.controller;
 
 import com.yourcaryourway.backend.dto.support.message.SupportMessageResponseDTO;
-import com.yourcaryourway.backend.service.SupportMessageService;
+import com.yourcaryourway.backend.service.support.SupportMessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

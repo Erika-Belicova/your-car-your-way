@@ -4,7 +4,7 @@ import com.yourcaryourway.backend.dto.support.conversation.SupportConversationDe
 import com.yourcaryourway.backend.dto.support.conversation.SupportConversationRequestDTO;
 import com.yourcaryourway.backend.dto.support.conversation.SupportConversationResponseDTO;
 import com.yourcaryourway.backend.enumeration.ConversationStatus;
-import com.yourcaryourway.backend.service.SupportConversationService;
+import com.yourcaryourway.backend.service.support.SupportConversationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

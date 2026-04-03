@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.service;
+package com.yourcaryourway.backend.service.authentication;
 
 import com.yourcaryourway.backend.dto.authentication.LoginRequestDTO;
 import com.yourcaryourway.backend.dto.authentication.RefreshTokenRequestDTO;

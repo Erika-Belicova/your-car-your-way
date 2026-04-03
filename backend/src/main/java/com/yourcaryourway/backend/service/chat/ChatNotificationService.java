@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.service;
+package com.yourcaryourway.backend.service.chat;
 
 import com.yourcaryourway.backend.dto.websocket.ChatNotificationDTO;
 import com.yourcaryourway.backend.enumeration.ConversationStatus;
@@ -60,6 +60,14 @@ public class ChatNotificationService {
     private boolean isSupportAgent(Authentication authentication) {
         return authentication.getAuthorities()
                 .contains(new SimpleGrantedAuthority("ROLE_SUPPORT_AGENT"));
+    }
+
+    // broadcast a system notification to all participants without a status change
+    public void broadcastSystemNotification(UUID chatSessionId, String notificationMessage) {
+        ChatNotificationDTO notification = new ChatNotificationDTO();
+        notification.setChatSessionId(chatSessionId);
+        notification.setNotificationMessage(notificationMessage);
+        messagingTemplate.convertAndSend("/topic/chat/" + chatSessionId, notification);
     }
 
 }
