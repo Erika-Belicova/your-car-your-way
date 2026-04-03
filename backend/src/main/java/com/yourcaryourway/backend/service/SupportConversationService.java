@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Service for managing support conversations.
  * Handles creation, retrieval and status updates of support conversations.
- * Triggers WebSocket notifications via ChatNotificationService on status changes.
+ * Triggers WebSocket notifications and timeout scheduling on status changes.
  */
 @Service
 public class SupportConversationService {
@@ -34,21 +34,25 @@ public class SupportConversationService {
     private final SupportMessageRepository supportMessageRepository;
     private final SupportConversationMapper supportConversationMapper;
     private final ChatNotificationService chatNotificationService;
+    private final ChatTimeoutScheduler chatTimeoutScheduler;
 
     public SupportConversationService(SupportConversationRepository supportConversationRepository,
                                       UserRepository userRepository,
                                       SupportMessageRepository supportMessageRepository,
                                       SupportConversationMapper supportConversationMapper,
-                                      ChatNotificationService chatNotificationService) {
+                                      ChatNotificationService chatNotificationService,
+                                      ChatTimeoutScheduler chatTimeoutScheduler) {
         this.supportConversationRepository = supportConversationRepository;
         this.userRepository = userRepository;
         this.supportMessageRepository = supportMessageRepository;
         this.supportConversationMapper = supportConversationMapper;
         this.chatNotificationService = chatNotificationService;
+        this.chatTimeoutScheduler = chatTimeoutScheduler;
     }
 
     @Transactional
-    public SupportConversationResponseDTO createConversation(String email, SupportConversationRequestDTO requestDTO) {
+    public SupportConversationResponseDTO createConversation(String email,
+                                                             SupportConversationRequestDTO requestDTO) {
         // fetch the authenticated user
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -56,17 +60,31 @@ public class SupportConversationService {
         // map request DTO to entity and set user and chat session ID
         SupportConversation conversation = supportConversationMapper.toSupportConversationEntity(requestDTO);
         conversation.setUser(user);
-        conversation.setChatSessionId(UUID.randomUUID()); // assign a chat session ID
+        conversation.setChatSessionId(UUID.randomUUID());
         SupportConversation saved = supportConversationRepository.save(conversation);
 
-        // create and save the initial message
+        // save initial message, schedule timeouts and notify user
+        initializeConversation(saved, requestDTO.getMessageContent());
+        return supportConversationMapper.toSupportConversationResponseDTO(saved);
+    }
+
+    // save initial message, schedule timeouts and notify user
+    private void initializeConversation(SupportConversation conversation, String messageContent) {
+        saveInitialMessage(conversation, messageContent);
+        // schedule timeout checks for the new conversation
+        chatTimeoutScheduler.scheduleOpenTimeouts(conversation.getChatSessionId());
+        // notify user that the conversation is open and waiting for an agent
+        chatNotificationService.broadcastSystemNotification(conversation.getChatSessionId(),
+                "Waiting for a support agent to join the conversation.");
+    }
+
+    // create and save the initial message for a new conversation
+    private void saveInitialMessage(SupportConversation conversation, String content) {
         SupportMessage initialMessage = new SupportMessage();
-        initialMessage.setSupportConversation(saved);
-        initialMessage.setContent(requestDTO.getMessageContent());
+        initialMessage.setSupportConversation(conversation);
+        initialMessage.setContent(content);
         initialMessage.setSenderType(SenderType.USER); // first message is always from the user
         supportMessageRepository.save(initialMessage);
-
-        return supportConversationMapper.toSupportConversationResponseDTO(saved);
     }
 
     @Transactional(readOnly = true)
@@ -110,11 +128,9 @@ public class SupportConversationService {
         conversation.setStatus(status);
         SupportConversation saved = supportConversationRepository.save(conversation);
 
-        // broadcast notification for chat conversation
-        if (conversation.getChatSessionId() != null) {
-            chatNotificationService.broadcastStatusNotification(
-                    conversation.getChatSessionId(), previousStatus, status, authentication);
-        }
+        // handle notifications and timeout scheduling after a status update
+        chatTimeoutScheduler.handlePostStatusUpdate(conversation.getChatSessionId(),
+                previousStatus, status, authentication);
         return supportConversationMapper.toSupportConversationResponseDTO(saved);
     }
 

@@ -1,6 +1,8 @@
 package com.yourcaryourway.backend.service;
 
+import com.yourcaryourway.backend.enumeration.ConversationStatus;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -9,18 +11,22 @@ import java.util.UUID;
 
 /**
  * Scheduler responsible for scheduling one-time timeout checks for chat sessions.
- * Triggers timeout handlers for OPEN and ACTIVE conversations.
+ * Handles timeout scheduling for OPEN, ACTIVE and WAITING conversations
+ * and broadcasts notifications after status changes.
  */
 @Service
 public class ChatTimeoutScheduler {
 
     private final TaskScheduler taskScheduler;
     private final ChatTimeoutService chatTimeoutService;
+    private final ChatNotificationService chatNotificationService;
 
     public ChatTimeoutScheduler(TaskScheduler taskScheduler,
-                                ChatTimeoutService chatTimeoutService) {
+                                ChatTimeoutService chatTimeoutService,
+                                ChatNotificationService chatNotificationService) {
         this.taskScheduler = taskScheduler;
         this.chatTimeoutService = chatTimeoutService;
+        this.chatNotificationService = chatNotificationService;
     }
 
     // schedule timeout checks when a conversation is created (OPEN status)
@@ -43,6 +49,24 @@ public class ChatTimeoutScheduler {
         // 15 min - check if user has responded, if not auto-close conversation due to inactivity
         taskScheduler.schedule(() -> chatTimeoutService.handleUserInactivityTimeout(chatSessionId),
                 Instant.now().plus(Duration.ofMinutes(15)));
+    }
+
+    // schedule waiting timeout when conversation is paused
+    public void scheduleWaitingTimeout(UUID chatSessionId) {
+        taskScheduler.schedule(() -> chatTimeoutService.handleWaitingTimeout(chatSessionId),
+                Instant.now().plus(Duration.ofMinutes(15)));
+    }
+
+    // schedule timeout checks and broadcast notification after a status update
+    public void handlePostStatusUpdate(UUID chatSessionId, ConversationStatus previousStatus,
+                                       ConversationStatus newStatus, Authentication authentication) {
+        if (newStatus == ConversationStatus.ACTIVE) {
+            scheduleActiveTimeouts(chatSessionId);
+        } else if (newStatus == ConversationStatus.WAITING) {
+            scheduleWaitingTimeout(chatSessionId);
+        }
+        chatNotificationService.broadcastStatusNotification(
+                chatSessionId, previousStatus, newStatus, authentication);
     }
 
 }

@@ -93,7 +93,9 @@ public class ChatTimeoutService {
     private void pauseConversation(SupportConversation conversation, UUID chatSessionId) {
         conversation.setStatus(ConversationStatus.WAITING);
         supportConversationRepository.save(conversation);
-        scheduleWaitingTimeout(chatSessionId);
+        // calling taskScheduler directly to avoid circular dependency
+        taskScheduler.schedule(() -> handleWaitingTimeout(chatSessionId),
+                Instant.now().plus(Duration.ofMinutes(15)));
         notifyChat(chatSessionId, ChatTimeoutNotification.AGENT_VERIFYING);
     }
 
@@ -103,12 +105,6 @@ public class ChatTimeoutService {
         findConversationWithStatus(chatSessionId, ConversationStatus.WAITING)
                 .ifPresent(conversation -> closeConversation(conversation, chatSessionId,
                         ChatTimeoutNotification.AGENT_UNABLE));
-    }
-
-    // schedule waiting timeout when conversation is paused
-    void scheduleWaitingTimeout(UUID chatSessionId) {
-        taskScheduler.schedule(() -> handleWaitingTimeout(chatSessionId),
-                Instant.now().plus(Duration.ofMinutes(15)));
     }
 
     // close the conversation and notify participants
