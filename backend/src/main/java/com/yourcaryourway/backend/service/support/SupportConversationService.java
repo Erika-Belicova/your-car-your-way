@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.service;
+package com.yourcaryourway.backend.service.support;
 
 import com.yourcaryourway.backend.dto.support.conversation.SupportConversationDetailDTO;
 import com.yourcaryourway.backend.dto.support.conversation.SupportConversationRequestDTO;
@@ -14,6 +14,8 @@ import com.yourcaryourway.backend.model.User;
 import com.yourcaryourway.backend.repository.SupportConversationRepository;
 import com.yourcaryourway.backend.repository.SupportMessageRepository;
 import com.yourcaryourway.backend.repository.UserRepository;
+import com.yourcaryourway.backend.service.chat.ChatTimeoutScheduler;
+import com.yourcaryourway.backend.service.chat.ChatNotificationService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

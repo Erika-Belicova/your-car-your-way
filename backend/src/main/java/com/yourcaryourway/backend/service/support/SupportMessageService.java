@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.service;
+package com.yourcaryourway.backend.service.support;
 
 import com.yourcaryourway.backend.dto.support.message.SupportMessageResponseDTO;
 import com.yourcaryourway.backend.mapper.SupportMessageMapper;

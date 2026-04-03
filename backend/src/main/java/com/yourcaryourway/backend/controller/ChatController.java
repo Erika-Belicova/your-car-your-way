@@ -2,7 +2,7 @@ package com.yourcaryourway.backend.controller;
 
 import com.yourcaryourway.backend.dto.websocket.ChatMessageRequestDTO;
 import com.yourcaryourway.backend.dto.websocket.ChatStatusUpdateDTO;
-import com.yourcaryourway.backend.service.ChatService;
+import com.yourcaryourway.backend.service.chat.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.messaging.handler.annotation.MessageMapping;

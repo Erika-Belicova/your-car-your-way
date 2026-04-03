@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.service;
+package com.yourcaryourway.backend.service.chat;
 
 import com.yourcaryourway.backend.enumeration.ConversationStatus;
 import org.springframework.scheduling.TaskScheduler;

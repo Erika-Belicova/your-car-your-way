@@ -1,4 +1,4 @@
-package com.yourcaryourway.backend.service;
+package com.yourcaryourway.backend.service.chat;
 
 import com.yourcaryourway.backend.dto.websocket.ChatMessageRequestDTO;
 import com.yourcaryourway.backend.dto.websocket.ChatMessageResponseDTO;

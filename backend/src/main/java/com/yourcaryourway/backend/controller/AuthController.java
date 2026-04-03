@@ -3,7 +3,7 @@ package com.yourcaryourway.backend.controller;
 import com.yourcaryourway.backend.dto.authentication.LoginRequestDTO;
 import com.yourcaryourway.backend.dto.authentication.RefreshTokenRequestDTO;
 import com.yourcaryourway.backend.response.AuthResponse;
-import com.yourcaryourway.backend.service.AuthService;
+import com.yourcaryourway.backend.service.authentication.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
