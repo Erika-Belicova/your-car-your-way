@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * DTO representing a support conversation with full message history.
@@ -17,6 +18,9 @@ public class SupportConversationDetailDTO {
 
     @Schema(description = "Unique identifier of the support conversation", example = "1")
     private Long id;
+
+    @Schema(description = "UUID of the chat session for WebSocket connection", example = "550e8400-e29b-41d4-a716-446655440000")
+    private UUID chatSessionId;
 
     @Schema(description = "Subject of the support conversation", example = "Problem with my reservation")
     private String subject;

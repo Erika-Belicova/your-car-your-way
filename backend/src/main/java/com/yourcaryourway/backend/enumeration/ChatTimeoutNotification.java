@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ChatTimeoutNotification {
 
+    WAITING_FOR_AGENT("Waiting for a support agent to connect to the conversation."),
     AGENTS_BUSY("Our agents are currently helping other customers, wait in the queue or contact support at a later time."),
     ALL_AGENTS_OCCUPIED("We are sorry, all our agents are occupied at this time. Please contact support at a later time."),
     AGENT_VERIFYING("The support agent is verifying information, they will be with you shortly."),
