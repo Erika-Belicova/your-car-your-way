@@ -1,1 +1,12 @@
-<p>navbar works!</p>
+<nav [class.agent-nav]="isSupportAgent()">
+
+  <div class="navbar-user">
+    @if (currentUser) {
+      <span>{{ currentUser.email }}</span>
+      <span>{{ isSupportAgent() ? 'Agent de support' : 'Utilisateur' }}</span>
+    }
+  </div>
+
+  <button (click)="logout()">Se déconnecter</button>
+
+</nav>

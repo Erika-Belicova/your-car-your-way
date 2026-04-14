@@ -1,0 +1,25 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #1976d2;
+
+  &.agent-nav {
+    background-color: #7b1fa2;
+  }
+}
+
+.navbar-user {
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+button {
+  color: white;
+  background: none;
+  border: 1px solid white;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
