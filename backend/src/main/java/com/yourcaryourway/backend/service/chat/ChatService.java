@@ -53,9 +53,19 @@ public class ChatService {
         if (conversation.getStatus() != ConversationStatus.ACTIVE) {
             throw new ConversationNotActiveException("Messages can only be sent to active conversations");
         }
-        SupportMessage saved = persistMessage(conversation, requestDTO.getContent(),
-                determineSenderType(authentication));
+        SenderType senderType = determineSenderType(authentication);
+        SupportMessage saved = persistMessage(conversation, requestDTO.getContent(), senderType);
         broadcastMessage(saved, requestDTO.getChatSessionId());
+
+        // reschedule timeout checks after each message
+        if (senderType == SenderType.USER) {
+            // user sent a message - reset agent inactivity check
+            chatTimeoutScheduler.scheduleAgentInactivityTimeout(requestDTO.getChatSessionId());
+        } else {
+            // agent sent a message - reset user inactivity check
+            // temporarily disabled - agent is responsible for closing the conversation
+            // chatTimeoutScheduler.scheduleUserInactivityTimeout(requestDTO.getChatSessionId());
+        }
     }
 
     // fetch the conversation by chat session ID

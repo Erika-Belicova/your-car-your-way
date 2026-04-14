@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -66,8 +67,9 @@ public class ChatTimeoutService {
     // auto-close if user has not responded within 15 minutes
     @Transactional
     void handleUserInactivityTimeout(UUID chatSessionId) {
-        findConversationWithStatus(chatSessionId, ConversationStatus.ACTIVE)
-                .ifPresent(conversation -> checkUserInactivity(conversation, chatSessionId));
+        // temporarily disabled - agent is responsible for closing the conversation
+        // findConversationWithStatus(chatSessionId, ConversationStatus.ACTIVE)
+        //        .ifPresent(conversation -> checkUserInactivity(conversation, chatSessionId));
     }
 
     // check if the last message was from the user and switch to WAITING if so
@@ -75,7 +77,11 @@ public class ChatTimeoutService {
         supportMessageRepository
                 // fetch the most recent message in a conversation
                 .findFirstBySupportConversationIdOrderBySentAtDesc(conversation.getId())
+                // check if it was sent by the user
                 .filter(message -> message.getSenderType() == SenderType.USER)
+                // check if the message is older than 5 minutes
+                .filter(message -> message.getSentAt()
+                        .isBefore(OffsetDateTime.now().minusMinutes(5)))
                 .ifPresent(message -> pauseConversation(conversation, chatSessionId));
     }
 
@@ -84,7 +90,11 @@ public class ChatTimeoutService {
         supportMessageRepository
                 // fetch the most recent message in a conversation
                 .findFirstBySupportConversationIdOrderBySentAtDesc(conversation.getId())
+                // check if it was sent by the support agent
                 .filter(message -> message.getSenderType() == SenderType.SUPPORT_AGENT)
+                // check if the message is older than 15 minutes
+                .filter(message -> message.getSentAt()
+                        .isBefore(OffsetDateTime.now().minusMinutes(15)))
                 .ifPresent(message -> closeConversation(conversation, chatSessionId,
                         ChatTimeoutNotification.CHAT_TIMED_OUT));
     }

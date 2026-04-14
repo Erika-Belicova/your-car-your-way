@@ -4,6 +4,7 @@ import com.yourcaryourway.backend.enumeration.SenderType;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
@@ -31,6 +32,7 @@ public class SupportMessage {
     private OffsetDateTime sentAt;
 
     @Enumerated(EnumType.STRING)
+    @JdbcType(org.hibernate.dialect.PostgreSQLEnumJdbcType.class)
     @Column(name = "sender_type", nullable = false)
     private SenderType senderType; // user or support agent
 

@@ -4,6 +4,7 @@ import com.yourcaryourway.backend.enumeration.ConversationStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
@@ -35,6 +36,7 @@ public class SupportConversation {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
+    @JdbcType(org.hibernate.dialect.PostgreSQLEnumJdbcType.class)
     private ConversationStatus status = ConversationStatus.OPEN;
 
     @ManyToOne
