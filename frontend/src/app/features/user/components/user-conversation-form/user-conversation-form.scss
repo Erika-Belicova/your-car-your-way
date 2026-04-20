@@ -1,0 +1,116 @@
+.form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 100px);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem 3rem;
+  margin: 2.5rem;
+  width: 70%;
+  max-width: 800px;
+  border: 1px solid #c4c4d8;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #2D2D31;
+  margin: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #2D2D31;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid #2D2D31;
+  border-radius: 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  color: #2D2D31;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #305FC7;
+}
+
+span {
+  font-size: 0.8rem;
+  color: #E02B0B;
+}
+
+.error-message {
+  font-size: 0.8rem;
+  color: #E02B0B;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.btn-back {
+  background-color: #2D2D31;
+  color: #FFFFFF;
+  border: 2px solid #2D2D31;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  border-radius: 4px;
+}
+
+.btn-back:hover {
+  background: none;
+  border: 2px solid #2D2D31;
+  color: #2D2D31;
+}
+
+button[type="submit"] {
+  background-color: #305FC7;
+  color: #FFFFFF;
+  border: 2px solid #305FC7;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  border-radius: 4px;
+}
+
+button[type="submit"]:hover {
+  background: none;
+  border: 2px solid #305FC7;
+  color: #2D2D31;
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.5;
+}

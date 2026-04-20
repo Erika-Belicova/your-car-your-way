@@ -1,1 +1,46 @@
-<p>user-conversation-form works!</p>
+<div class="form-container">
+  <div class="form-card">
+    <h2>Contact Support</h2>
+
+    <form [formGroup]="conversationForm" (ngSubmit)="onSubmit()">
+
+      <div>
+        <label for="subject">Subject</label>
+        <input
+          id="subject"
+          type="text"
+          formControlName="subject"
+          placeholder="Enter the subject of your request"
+        />
+        @if (submitted && conversationForm.get('subject')?.invalid) {
+          <span>Subject is required.</span>
+        }
+      </div>
+
+      <div>
+        <label for="messageContent">Message</label>
+        <textarea
+          id="messageContent"
+          formControlName="messageContent"
+          placeholder="Describe your issue"
+          rows="3"
+        ></textarea>
+        @if (submitted && conversationForm.get('messageContent')?.invalid) {
+          <span>Message is required.</span>
+        }
+      </div>
+
+      @if (errorMessage) {
+        <div class="error-message">{{ errorMessage }}</div>
+      }
+
+      <div class="form-actions">
+        <button type="button" class="btn-back" (click)="goBack()">Back</button>
+        <button type="submit" [disabled]="isLoading">
+          {{ isLoading ? 'Sending...' : 'Send' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
