@@ -8,7 +8,7 @@ nav {
 }
 
 nav.agent-nav {
-  border-bottom-color: #F43818;
+  border-bottom-color: #E02B0B;
 }
 
 .navbar-logo {
@@ -43,7 +43,7 @@ nav.agent-nav {
 }
 
 .navbar-role.agent {
-  color: #F43818;
+  color: #E02B0B;
 }
 
 .navbar-email {
@@ -52,27 +52,30 @@ nav.agent-nav {
 }
 
 button {
-  background: none;
-  border: 1.5px solid #305FC7;
-  color: #2D2D31;
-  padding: 0.6rem 1rem;
+  background-color: #305FC7;
+  color: #FFFFFF;
+  border: 2px solid #305FC7;
+  padding: 0.4rem 1rem;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.85rem;
+  font-weight: 400;
   border-radius: 4px;
 }
 
 button:hover {
-  background-color: #305FC7;
-  color: #FFFFFF;
-}
-
-.agent-nav button {
-  border-color: #F43818;
+  background: none;
+  border: 2px solid #305FC7;
   color: #2D2D31;
 }
 
+.agent-nav button {
+  border-color: #E02B0B;
+  background-color: #E02B0B;
+}
+
 .agent-nav button:hover {
-  background-color: #F43818;
-  color: #FFFFFF;
+  background-color: #FFFFFF;
+  border: 2px solid #E02B0B;
+  color: #2D2D31;
 }
