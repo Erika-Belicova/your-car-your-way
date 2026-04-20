@@ -1,12 +1,27 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { Navbar } from './shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, Navbar],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
-export class App {
-  protected readonly title = signal('frontend');
+export class App implements OnInit {
+
+  title = 'frontend';
+  showNavbar = false;
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    // hide navbar on login page
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.showNavbar = event.urlAfterRedirects !== '/login';
+      }
+    });
+  }
+
 }
