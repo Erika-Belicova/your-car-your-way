@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
@@ -24,7 +24,8 @@ export class Login {
     private authService: AuthService,
     private userService: UserService,
     private tokenService: TokenService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     // redirect authenticated users to their main page based on role
     if (this.tokenService.getAccessToken()) {
@@ -72,6 +73,7 @@ export class Login {
       error: () => {
         this.isLoading = false;
         this.errorMessage = 'Invalid email or password. Please try again.';
+        this.cdr.detectChanges();
       }
     });
   }

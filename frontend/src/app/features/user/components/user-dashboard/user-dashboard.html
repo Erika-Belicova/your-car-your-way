@@ -1,1 +1,16 @@
-<p>user-dashboard works!</p>
+<div class="dashboard-container">
+  <div class="dashboard-card">
+    <div class="dashboard-header">
+      <h2>Support Center</h2>
+      <p>How can we help you today?</p>
+    </div>
+    <div class="dashboard-actions">
+      <button class="btn-contact" (click)="goToNewConversation()">
+        Contact Support
+      </button>
+      <button class="btn-conversations" (click)="goToConversations()">
+        My Support Conversations
+      </button>
+    </div>
+  </div>
+</div>
