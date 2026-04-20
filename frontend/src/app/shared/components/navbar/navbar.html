@@ -1,12 +1,17 @@
 <nav [class.agent-nav]="isSupportAgent()">
 
-  <div class="navbar-user">
-    @if (currentUser) {
-      <span>{{ currentUser.email }}</span>
-      <span>{{ isSupportAgent() ? 'Agent de support' : 'Utilisateur' }}</span>
-    }
-  </div>
+  <img src="logo.png" alt="Your Car Your Way" class="navbar-logo" />
 
-  <button (click)="logout()">Se déconnecter</button>
+  <div class="navbar-right">
+    @if (currentUser) {
+      <div class="navbar-user-info">
+        <span class="navbar-role" [class.agent]="isSupportAgent()">
+          {{ isSupportAgent() ? 'Support Agent' : 'User' }}
+        </span>
+        <span class="navbar-email">{{ currentUser.email }}</span>
+      </div>
+    }
+    <button (click)="logout()">Log out</button>
+  </div>
 
 </nav>

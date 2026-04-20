@@ -1,25 +1,78 @@
 nav {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background-color: #1976d2;
-
-  &.agent-nav {
-    background-color: #7b1fa2;
-  }
+  align-items: stretch;
+  background-color: #FFFFFF;
+  padding: 0.25rem 1rem;
+  border-bottom: 3px solid #305FC7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-user {
+nav.agent-nav {
+  border-bottom-color: #F43818;
+}
+
+.navbar-logo {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-left: auto;
+  padding: 0 0.25rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.navbar-user-info {
   display: flex;
   flex-direction: column;
-  color: white;
+  align-items: flex-start;
+  gap: 0.1rem;
+}
+
+.navbar-role {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #305FC7;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  padding-left: 0.05rem;
+}
+
+.navbar-role.agent {
+  color: #F43818;
+}
+
+.navbar-email {
+  font-size: 0.85rem;
+  color: #2D2D31;
 }
 
 button {
-  color: white;
   background: none;
-  border: 1px solid white;
-  padding: 0.5rem 1rem;
+  border: 1.5px solid #305FC7;
+  color: #2D2D31;
+  padding: 0.6rem 1rem;
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #305FC7;
+  color: #FFFFFF;
+}
+
+.agent-nav button {
+  border-color: #F43818;
+  color: #2D2D31;
+}
+
+.agent-nav button:hover {
+  background-color: #F43818;
+  color: #FFFFFF;
 }

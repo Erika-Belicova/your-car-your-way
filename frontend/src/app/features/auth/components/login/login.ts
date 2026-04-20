@@ -71,7 +71,7 @@ export class Login {
       },
       error: () => {
         this.isLoading = false;
-        this.errorMessage = 'Identifiants invalides. Veuillez réessayer.';
+        this.errorMessage = 'Invalid email or password. Please try again.';
       }
     });
   }
