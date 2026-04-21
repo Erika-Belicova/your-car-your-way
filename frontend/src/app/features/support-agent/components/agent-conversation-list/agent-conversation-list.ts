@@ -2,8 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { ConversationService } from '../../../../core/services/conversation.service';
-import { SupportConversationResponseDTO } from '../../../../core/interfaces/support-conversation-response-dto';
-import { ConversationStatus } from '../../../../core/interfaces/conversation-status';
+import { SupportConversationResponseDTO } from '../../../../core/interfaces/support-conversation/support-conversation-response-dto';
+import { ConversationStatus } from '../../../../core/enumerations/conversation-status';
 
 @Component({
   selector: 'app-agent-conversation-list',

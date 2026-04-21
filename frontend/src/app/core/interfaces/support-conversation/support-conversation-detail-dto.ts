@@ -1,4 +1,4 @@
-import { SupportMessageResponseDTO } from './support-message-response-dto';
+import { SupportMessageResponseDTO } from '../support-message/support-message-response-dto';
 
 export interface SupportConversationDetailDTO {
   id: number;

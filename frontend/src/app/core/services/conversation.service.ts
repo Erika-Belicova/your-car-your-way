@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { SupportConversationRequestDTO } from '../interfaces/support-conversation-request-dto';
-import { SupportConversationResponseDTO } from '../interfaces/support-conversation-response-dto';
-import { SupportConversationDetailDTO } from '../interfaces/support-conversation-detail-dto';
-import { ConversationStatus } from '../interfaces/conversation-status';
+import { SupportConversationRequestDTO } from '../interfaces/support-conversation/support-conversation-request-dto';
+import { SupportConversationResponseDTO } from '../interfaces/support-conversation/support-conversation-response-dto';
+import { SupportConversationDetailDTO } from '../interfaces/support-conversation/support-conversation-detail-dto';
+import { ConversationStatus } from '../enumerations/conversation-status';
 
 @Injectable({
   providedIn: 'root',
