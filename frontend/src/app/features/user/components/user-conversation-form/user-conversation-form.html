@@ -38,7 +38,7 @@
       }
 
       <div class="form-actions">
-        <button type="button" class="btn-back" (click)="goBack()">Back</button>
+        <button type="button" class="btn-back" (click)="goToDashboard()">Close</button>
         <button type="submit" [disabled]="isLoading">
           {{ isLoading ? 'Sending...' : 'Send' }}
         </button>

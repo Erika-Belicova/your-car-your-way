@@ -51,7 +51,7 @@ export class UserConversationForm {
   }
 
   // navigate back to dashboard
-  goBack(): void {
+  goToDashboard(): void {
     this.router.navigate(['/dashboard']);
   }
 
