@@ -12,8 +12,11 @@
           formControlName="subject"
           placeholder="Enter the subject of your request"
         />
-        @if (submitted && conversationForm.get('subject')?.invalid) {
+        @if (submitted && conversationForm.get('subject')?.hasError('required')) {
           <span>Subject is required.</span>
+        }
+        @if (submitted && conversationForm.get('subject')?.hasError('maxlength')) {
+          <span>Subject cannot exceed 255 characters.</span>
         }
       </div>
 

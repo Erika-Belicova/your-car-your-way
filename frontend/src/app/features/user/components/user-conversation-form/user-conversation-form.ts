@@ -23,7 +23,7 @@ export class UserConversationForm {
   ) {
     // form with subject and initial message validation
     this.conversationForm = this.fb.group({
-      subject: ['', [Validators.required]],
+      subject: ['', [Validators.required, Validators.maxLength(255)]],
       messageContent: ['', [Validators.required]]
     });
   }
