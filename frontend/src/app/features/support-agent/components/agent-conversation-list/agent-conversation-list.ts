@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { ConversationService } from '../../../../core/services/conversation.service';
-import { SupportConversationResponseDTO } from '../../../../core/interfaces/support-conversation-response-dto';
-import { ConversationStatus } from '../../../../core/interfaces/conversation-status';
+import { SupportConversationResponseDTO } from '../../../../core/interfaces/support-conversation/support-conversation-response-dto';
+import { ConversationStatus } from '../../../../core/enumerations/conversation-status';
 
 @Component({
   selector: 'app-agent-conversation-list',
@@ -11,13 +11,14 @@ import { ConversationStatus } from '../../../../core/interfaces/conversation-sta
   templateUrl: './agent-conversation-list.html',
   styleUrl: './agent-conversation-list.scss',
 })
-export class AgentConversationList implements OnInit {
+export class AgentConversationList implements OnInit, OnDestroy {
 
   conversations: SupportConversationResponseDTO[] = [];
   isLoading = true;
   errorMessage = '';
   openDropdownId: number | null = null;
   ConversationStatus = ConversationStatus;
+  private pollingInterval: number | null = null;
 
   constructor(
     private conversationService: ConversationService,
@@ -26,6 +27,19 @@ export class AgentConversationList implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadConversations();
+    // refresh conversations every 30 seconds
+    this.pollingInterval = setInterval(() => this.loadConversations(), 30000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
+  }
+
+  // manual refresh
+  refresh(): void {
     this.loadConversations();
   }
 

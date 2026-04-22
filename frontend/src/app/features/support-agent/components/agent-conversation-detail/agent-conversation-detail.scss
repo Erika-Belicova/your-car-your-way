@@ -1,0 +1,267 @@
+.detail-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  padding: 2rem;
+}
+
+.detail-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 2rem;
+  width: 800px;
+  border: 1px solid #c4c4d8;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.detail-header {
+  display: grid;
+  grid-template-rows: auto auto;
+  padding-bottom: 0.5rem;
+}
+
+.detail-header-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.detail-data {
+  display: flex;
+  gap: 1.5rem;
+  border-top: 1px solid #c4c4d8;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.date-value {
+  white-space: nowrap;
+}
+
+h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2D2D31;
+  margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.conversation-status {
+  font-size: 0.8rem;
+  color: #305FC7;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  border: 2px solid #c4c4d8;
+  min-width: 0;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-width: 70%;
+  padding: 0.75rem 0.8rem 0.5rem 0.8rem;
+  border-radius: 8px;
+}
+
+.message-user {
+  align-self: flex-start;
+  background-color: #EDEDED;
+  color: #2D2D31;
+  margin-left: 0.5rem;
+}
+
+.message-agent {
+  align-self: flex-end;
+  background-color: #fad3d3;
+  color: #2D2D31;
+  margin-right: 0.5rem;
+}
+
+.message-sender {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.message-content {
+  font-size: 0.9rem;
+}
+
+.message-time {
+  font-size: 0.7rem;
+  align-self: flex-end;
+  color: #2D2D31;
+}
+
+.notification {
+  align-self: center;
+  font-size: 0.8rem;
+  color: #505057;
+  font-weight: 400;
+  text-align: center;
+  padding: 0.25rem 1rem;
+  background-color: #f1efef;
+  border-radius: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.chat-input {
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid #2D2D31;
+  border-radius: 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  color: #2D2D31;
+}
+
+.chat-input input:focus {
+  outline: none;
+  border-color: #305FC7;
+}
+
+.chat-input input:disabled {
+  opacity: 0.5;
+}
+
+.chat-input button {
+  background-color: #305FC7;
+  color: #FFFFFF;
+  border: 2px solid #305FC7;
+  padding: 0.6rem 1.5rem;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  border-radius: 4px;
+}
+
+.chat-input button:hover {
+  background: none;
+  border: 2px solid #305FC7;
+  color: #2D2D31;
+}
+
+.chat-input button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.chat-input button:disabled:hover {
+  background-color: #305FC7;
+  color: #FFFFFF;
+}
+
+.btn-back {
+  background-color: #2D2D31;
+  color: #FFFFFF;
+  border: 2px solid #2D2D31;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  border-radius: 4px;
+  width: 100px;
+  height: 54px;
+}
+
+.btn-back:hover {
+  background: none;
+  border: 2px solid #2D2D31;
+  color: #2D2D31;
+}
+
+.error-message {
+  font-size: 0.8rem;
+  color: #E02B0B;
+}
+
+.conversation-date {
+  font-size: 0.8rem;
+  color: #2D2D31;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.conversation-controls {
+  display: flex;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #c4c4d8;
+  margin-top: 0.75rem;
+  justify-content: flex-start;
+}
+
+.btn-activate,
+.btn-pause,
+.btn-resume {
+  background-color: #305FC7;
+  color: #FFFFFF;
+  border: 2px solid #305FC7;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  border-radius: 4px;
+}
+
+.btn-activate:hover,
+.btn-pause:hover,
+.btn-resume:hover {
+  background: none;
+  border: 2px solid #305FC7;
+  color: #2D2D31;
+}
+
+.btn-close {
+  background-color: #E02B0B;
+  color: #FFFFFF;
+  border: 2px solid #E02B0B;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  border-radius: 4px;
+}
+
+.btn-close:hover {
+  background: none;
+  border: 2px solid #E02B0B;
+  color: #2D2D31;
+}

@@ -1,4 +1,4 @@
-import { ConversationStatus } from './conversation-status';
+import { ConversationStatus } from '../../enumerations/conversation-status';
 
 export interface SupportConversationResponseDTO {
   id: number;

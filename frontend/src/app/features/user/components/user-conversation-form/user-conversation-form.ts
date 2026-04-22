@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ConversationService } from '../../../../core/services/conversation.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-user-conversation-form',
@@ -19,7 +20,8 @@ export class UserConversationForm {
   constructor(
     private fb: FormBuilder,
     private conversationService: ConversationService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     // form with subject and initial message validation
     this.conversationForm = this.fb.group({
@@ -50,9 +52,9 @@ export class UserConversationForm {
     });
   }
 
-  // navigate back to dashboard
-  goToDashboard(): void {
-    this.router.navigate(['/dashboard']);
+  // navigate back to previous page
+  goBack(): void {
+    this.location.back();
   }
 
 }
