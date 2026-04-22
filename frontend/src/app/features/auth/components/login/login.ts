@@ -70,9 +70,13 @@ export class Login {
           this.router.navigate(['/dashboard']);
         }
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        this.errorMessage = 'Invalid email or password. Please try again.';
+        if (err.status === 401) {
+          this.errorMessage = 'Invalid email or password. Please try again.';
+        } else {
+          this.errorMessage = 'Unable to reach the server. Please check your connection or try again later.';
+        }
         this.cdr.detectChanges();
       }
     });

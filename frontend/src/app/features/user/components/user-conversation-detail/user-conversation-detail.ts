@@ -8,6 +8,7 @@ import { ChatService } from '../../../../core/services/chat.service';
 import { SupportConversationDetailDTO } from '../../../../core/interfaces/support-conversation/support-conversation-detail-dto';
 import { ChatMessageResponseDTO } from '../../../../core/interfaces/chat/chat-message-response-dto';
 import { ConversationStatus } from '../../../../core/enumerations/conversation-status';
+import { ChatNotificationDTO } from '../../../../core/interfaces/chat/chat-notification-dto';
 
 @Component({
   selector: 'app-user-conversation-detail',
@@ -69,12 +70,24 @@ export class UserConversationDetail implements OnInit, OnDestroy {
   // map message history from REST response to chat items
   private mapMessagesToChatItems(conversation: SupportConversationDetailDTO
   ): Array<ChatMessageResponseDTO | { type: 'notification', text: string }> {
-    return conversation.messages.map(m => ({
-      chatSessionId: conversation.chatSessionId,
-      content: m.content,
-      senderType: m.senderType,
-      sentAt: m.sentAt
-    }));
+
+    const messages: Array<ChatMessageResponseDTO | { type: 'notification', text: string }> =
+      conversation.messages.map(m => ({
+        chatSessionId: conversation.chatSessionId,
+        content: m.content,
+        senderType: m.senderType,
+        sentAt: m.sentAt
+      }));
+
+    // add waiting notification after initial message for open conversations
+    if (conversation.status === ConversationStatus.OPEN) {
+      messages.push({
+        type: 'notification',
+        text: 'Waiting for a support agent to connect to the conversation.'
+      });
+    }
+
+    return messages;
   }
 
   private connectToWebSocket(chatSessionId: string): void {
@@ -96,7 +109,7 @@ export class UserConversationDetail implements OnInit, OnDestroy {
   }
 
   // handle incoming notification and update conversation status if changed
-  private handleIncomingNotification(notification: any): void {
+  private handleIncomingNotification(notification: ChatNotificationDTO): void {
     // add notification message to chat window if present
     if (notification.notificationMessage) {
       this.chatItems.push({ type: 'notification', text: notification.notificationMessage });
@@ -110,7 +123,8 @@ export class UserConversationDetail implements OnInit, OnDestroy {
   }
 
   // type guard to distinguish messages from notifications
-  isMessage(item: any): item is ChatMessageResponseDTO {
+  isMessage(item: ChatMessageResponseDTO | { type: 'notification', text: string }
+  ): item is ChatMessageResponseDTO {
     return 'senderType' in item;
   }
 
@@ -129,7 +143,7 @@ export class UserConversationDetail implements OnInit, OnDestroy {
   private scrollToBottom(): void {
     setTimeout(() => {
       if (this.chatWindow) {
-        this.chatWindow.nativeElement.scrollTop =
+        this.chatWindow.nativeElement.scrollTop = 
           this.chatWindow.nativeElement.scrollHeight;
       }
     }, 50);

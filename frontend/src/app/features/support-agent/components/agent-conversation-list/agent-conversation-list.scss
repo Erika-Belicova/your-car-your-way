@@ -8,14 +8,41 @@
 }
 
 .header-card {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: center;
   padding: 1rem 3rem;
   width: 800px;
   border: 1px solid #c4c4d8;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.header-card h2 {
+  text-align: center;
+}
+
+.header-card .btn-refresh {
+  justify-self: end;
+}
+
+.btn-refresh {
+  background-color: #305FC7;
+  color: #FFFFFF;
+  border: 2px solid #305FC7;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  border-radius: 4px;
+  height: 48px;
+}
+
+.btn-refresh:hover {
+  background: none;
+  border: 2px solid #305FC7;
+  color: #2D2D31;
 }
 
 .status-card {
@@ -135,29 +162,6 @@ h3 {
 
 .dropdown-item:hover {
   background-color: #f5f5f5;
-}
-
-.btn-activate,
-.btn-resume,
-.btn-continue {
-  background-color: #305FC7;
-  color: #FFFFFF;
-  border: 2px solid #305FC7;
-  padding: 0.3rem 0.75rem;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 400;
-  border-radius: 4px;
-  min-width: 180px;
-}
-
-.btn-activate:hover,
-.btn-resume:hover,
-.btn-continue:hover {
-  background: none;
-  border: 2px solid #305FC7;
-  color: #2D2D31;
 }
 
 .empty-message {

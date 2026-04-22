@@ -1,7 +1,9 @@
 <div class="list-container">
 
   <div class="header-card">
+    <div></div>
     <h2>Support Conversations</h2>
+    <button class="btn-refresh" (click)="refresh()">Refresh</button>
   </div>
 
   @if (isLoading) {
@@ -27,9 +29,6 @@
           <div class="conversation-data">
             <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <div class="conversation-actions">
-              <button class="btn-activate" (click)="activateChat(conversation.id, $event)">
-                Activate Chat
-              </button>
               <div class="status-dropdown">
                 <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
                   Status: {{ conversation.status }} ▾
@@ -62,9 +61,6 @@
           <div class="conversation-data">
             <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <div class="conversation-actions">
-              <button class="btn-continue" (click)="continueChat(conversation.id, $event)">
-                Continue Chat
-              </button>
               <div class="status-dropdown">
                 <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
                   Status: {{ conversation.status }} ▾
@@ -97,9 +93,6 @@
           <div class="conversation-data">
             <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <div class="conversation-actions">
-              <button class="btn-resume" (click)="resumeChat(conversation.id, $event)">
-                Resume Chat
-              </button>
               <div class="status-dropdown">
                 <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
                   Status: {{ conversation.status }} ▾
