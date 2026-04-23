@@ -32,7 +32,7 @@ public class ChatNotificationService {
         messagingTemplate.convertAndSend("/topic/chat/" + chatSessionId, notification);
     }
 
-    // determine notification message based on previous status, new status and who triggered it
+    // determine notification message based on previous status and new status
     private String determineNotificationMessage(ConversationStatus previousStatus,
                                                 ConversationStatus newStatus) {
         return switch (newStatus) {

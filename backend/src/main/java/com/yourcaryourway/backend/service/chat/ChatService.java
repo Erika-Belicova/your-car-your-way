@@ -57,14 +57,10 @@ public class ChatService {
         SupportMessage saved = persistMessage(conversation, requestDTO.getContent(), senderType);
         broadcastMessage(saved, requestDTO.getChatSessionId());
 
-        // reschedule timeout checks after each message
+        // reschedule timeout check after each message
         if (senderType == SenderType.USER) {
             // user sent a message - reset agent inactivity check
             chatTimeoutScheduler.scheduleAgentInactivityTimeout(requestDTO.getChatSessionId());
-        } else {
-            // agent sent a message - reset user inactivity check
-            // temporarily disabled - agent is responsible for closing the conversation
-            // chatTimeoutScheduler.scheduleUserInactivityTimeout(requestDTO.getChatSessionId());
         }
     }
 
@@ -98,7 +94,7 @@ public class ChatService {
         messagingTemplate.convertAndSend("/topic/chat/" + chatSessionId, responseDTO);
     }
 
-    // update conversation status via WebSocket - used for real-time status changes during active chat
+    // update conversation status via WebSocket - used for status changes during active chat
     @Transactional
     public void updateStatus(ChatStatusUpdateDTO statusUpdateDTO) {
         // extract data from DTO

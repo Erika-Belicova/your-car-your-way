@@ -69,8 +69,10 @@ public class ChatTimeoutService {
         supportMessageRepository
                 // fetch the most recent message in a conversation
                 .findFirstBySupportConversationIdOrderBySentAtDesc(conversation.getId())
+
                 // check if it was sent by the user
                 .filter(message -> message.getSenderType() == SenderType.USER)
+
                 // check if the message is older than 5 minutes
                 .filter(message -> message.getSentAt()
                         .isBefore(OffsetDateTime.now().minusMinutes(5)))
@@ -81,6 +83,7 @@ public class ChatTimeoutService {
     private void pauseConversation(SupportConversation conversation, UUID chatSessionId) {
         conversation.setStatus(ConversationStatus.WAITING);
         supportConversationRepository.save(conversation);
+
         // calling taskScheduler directly to avoid circular dependency
         taskScheduler.schedule(() -> handleWaitingTimeout(chatSessionId),
                 Instant.now().plus(Duration.ofMinutes(15)));
