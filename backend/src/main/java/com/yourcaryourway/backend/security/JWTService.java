@@ -49,7 +49,7 @@ public class JWTService {
         try {
             jwt = jwtDecoder.decode(refreshToken); // decode and validate the refresh token
         } catch (Exception e) {
-            throw new JwtValidationException("Invalid or expired refresh token");
+            throw new JwtValidationException("Invalid or expired refresh token.");
         }
         // extract subject and role from the refresh token to build the new token
         return buildAndEncode(jwt.getSubject(), jwt.getClaimAsString("role"),

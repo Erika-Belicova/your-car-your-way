@@ -101,7 +101,7 @@ public class SupportConversationController {
             @PathVariable("id") Long id,
             @RequestParam ConversationStatus status, // status passed as query parameter
             Authentication authentication) {
-        return ResponseEntity.ok(supportConversationService.updateConversationStatus(id, status, authentication));
+        return ResponseEntity.ok(supportConversationService.updateConversationStatus(id, status));
     }
 
 }

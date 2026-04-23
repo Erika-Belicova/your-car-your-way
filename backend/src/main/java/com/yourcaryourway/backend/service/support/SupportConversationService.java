@@ -16,7 +16,6 @@ import com.yourcaryourway.backend.repository.SupportMessageRepository;
 import com.yourcaryourway.backend.repository.UserRepository;
 import com.yourcaryourway.backend.service.chat.ChatTimeoutScheduler;
 import com.yourcaryourway.backend.service.chat.ChatNotificationService;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,9 +74,6 @@ public class SupportConversationService {
         saveInitialMessage(conversation, messageContent);
         // schedule timeout checks for the new conversation
         chatTimeoutScheduler.scheduleOpenTimeouts(conversation.getChatSessionId());
-        // notify user that the conversation is open and waiting for an agent
-        chatNotificationService.broadcastSystemNotification(conversation.getChatSessionId(),
-                "Waiting for a support agent to join the conversation.");
     }
 
     // create and save the initial message for a new conversation
@@ -119,8 +115,7 @@ public class SupportConversationService {
 
     // update conversation status via REST - used for manual dropdown status changes
     @Transactional
-    public SupportConversationResponseDTO updateConversationStatus(Long id, ConversationStatus status,
-                                                                   Authentication authentication) {
+    public SupportConversationResponseDTO updateConversationStatus(Long id, ConversationStatus status) {
         // fetch conversation or throw if not found
         SupportConversation conversation = supportConversationRepository.findById(id)
                 .orElseThrow(() -> new ConversationNotFoundException("Support conversation not found"));
@@ -132,7 +127,7 @@ public class SupportConversationService {
 
         // handle notifications and timeout scheduling after a status update
         chatTimeoutScheduler.handlePostStatusUpdate(conversation.getChatSessionId(),
-                previousStatus, status, authentication);
+                previousStatus, status);
         return supportConversationMapper.toSupportConversationResponseDTO(saved);
     }
 

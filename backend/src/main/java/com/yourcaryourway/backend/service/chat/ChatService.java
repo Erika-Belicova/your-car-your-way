@@ -100,7 +100,7 @@ public class ChatService {
 
     // update conversation status via WebSocket - used for real-time status changes during active chat
     @Transactional
-    public void updateStatus(ChatStatusUpdateDTO statusUpdateDTO, Authentication authentication) {
+    public void updateStatus(ChatStatusUpdateDTO statusUpdateDTO) {
         // extract data from DTO
         UUID chatSessionId = statusUpdateDTO.getChatSessionId();
         ConversationStatus newStatus = statusUpdateDTO.getStatus();
@@ -112,7 +112,7 @@ public class ChatService {
         supportConversationRepository.save(conversation);
 
         // handle notifications and timeout scheduling after a status update
-        chatTimeoutScheduler.handlePostStatusUpdate(chatSessionId, previousStatus, newStatus, authentication);
+        chatTimeoutScheduler.handlePostStatusUpdate(chatSessionId, previousStatus, newStatus);
     }
 
 }
