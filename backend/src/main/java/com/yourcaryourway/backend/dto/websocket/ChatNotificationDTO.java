@@ -4,6 +4,7 @@ import com.yourcaryourway.backend.enumeration.ConversationStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
@@ -22,5 +23,8 @@ public class ChatNotificationDTO {
     @Schema(description = "Notification message for the participants",
             example = "A support agent has joined the conversation")
     private String notificationMessage;
+
+    @Schema(description = "Updated timestamp of the conversation")
+    private OffsetDateTime updatedAt;
 
 }

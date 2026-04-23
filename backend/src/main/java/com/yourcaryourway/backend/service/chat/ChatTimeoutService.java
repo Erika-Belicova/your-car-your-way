@@ -42,8 +42,10 @@ public class ChatTimeoutService {
     @Transactional
     void handleOpenFiveMinuteTimeout(UUID chatSessionId) {
         findConversationWithStatus(chatSessionId, ConversationStatus.OPEN)
-                .ifPresent(conversation -> notifyChat(chatSessionId,
-                        ChatTimeoutNotification.AGENTS_BUSY));
+                .ifPresent(conversation ->
+                        chatNotificationService.broadcastSystemNotification(
+                                // show notification without status change
+                                chatSessionId, ChatTimeoutNotification.AGENTS_BUSY.getMessage()));
     }
 
     // auto-close conversation after 15 minutes with no agent joining
@@ -53,7 +55,9 @@ public class ChatTimeoutService {
                 .ifPresent(conversation -> {
                     conversation.setStatus(ConversationStatus.CLOSED);
                     supportConversationRepository.save(conversation);
-                    notifyChat(chatSessionId, ChatTimeoutNotification.ALL_AGENTS_OCCUPIED);
+                    notifyStatusChange(chatSessionId,
+                            ConversationStatus.OPEN, ConversationStatus.CLOSED,
+                            ChatTimeoutNotification.ALL_AGENTS_OCCUPIED);
                 });
     }
 
@@ -87,7 +91,8 @@ public class ChatTimeoutService {
         // calling taskScheduler directly to avoid circular dependency
         taskScheduler.schedule(() -> handleWaitingTimeout(chatSessionId),
                 Instant.now().plus(Duration.ofMinutes(15)));
-        notifyChat(chatSessionId, ChatTimeoutNotification.AGENT_VERIFYING);
+        notifyStatusChange(chatSessionId, ConversationStatus.ACTIVE,
+                ConversationStatus.WAITING, ChatTimeoutNotification.AGENT_VERIFYING);
     }
 
     // auto-close if agent has not resumed within 15 minutes of pausing
@@ -100,7 +105,9 @@ public class ChatTimeoutService {
                     supportConversationRepository.save(conversation);
 
                     // show notification in chat
-                    notifyChat(chatSessionId, ChatTimeoutNotification.AGENT_UNABLE);
+                    notifyStatusChange(chatSessionId,
+                            ConversationStatus.WAITING, ConversationStatus.CLOSED,
+                            ChatTimeoutNotification.AGENT_UNABLE);
                 });
     }
 
@@ -111,9 +118,11 @@ public class ChatTimeoutService {
                 .filter(conversation -> conversation.getStatus() == status);
     }
 
-    // notify the participants of the chat via a system notification
-    private void notifyChat(UUID chatSessionId, ChatTimeoutNotification notification) {
-        chatNotificationService.broadcastSystemNotification(chatSessionId, notification.getMessage());
+    // notify the participants of the chat of a status change via a system notification
+    private void notifyStatusChange(UUID chatSessionId, ConversationStatus previousStatus,
+                                    ConversationStatus newStatus, ChatTimeoutNotification notification) {
+        chatNotificationService.broadcastStatusNotification(
+                chatSessionId, previousStatus, newStatus, notification.getMessage());
     }
 
 }
