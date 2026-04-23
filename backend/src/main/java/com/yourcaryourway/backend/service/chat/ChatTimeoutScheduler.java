@@ -76,13 +76,14 @@ public class ChatTimeoutScheduler {
     // schedule timeout checks and broadcast notification after a status update
     public void handlePostStatusUpdate(UUID chatSessionId, ConversationStatus previousStatus,
                                        ConversationStatus newStatus) {
-        if (newStatus == ConversationStatus.ACTIVE) {
-            scheduleActiveTimeouts(chatSessionId);
-        } else if (newStatus == ConversationStatus.WAITING) {
-            scheduleWaitingTimeout(chatSessionId);
+        switch (newStatus) {
+            case ACTIVE -> scheduleActiveTimeouts(chatSessionId);
+            case WAITING -> scheduleWaitingTimeout(chatSessionId);
+            case OPEN -> scheduleOpenTimeouts(chatSessionId);
+            default -> {} // CLOSED does not need scheduling
         }
         chatNotificationService.broadcastStatusNotification(
-                chatSessionId, previousStatus, newStatus);
+                chatSessionId, previousStatus, newStatus, null);
     }
 
 }
