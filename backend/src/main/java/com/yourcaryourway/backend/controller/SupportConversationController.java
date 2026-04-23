@@ -99,9 +99,9 @@ public class SupportConversationController {
     @PreAuthorize("hasRole('SUPPORT_AGENT')")
     public ResponseEntity<SupportConversationResponseDTO> updateConversationStatus(
             @PathVariable("id") Long id,
-            @RequestParam ConversationStatus status, // status passed as query parameter
-            Authentication authentication) {
-        return ResponseEntity.ok(supportConversationService.updateConversationStatus(id, status, authentication));
+            // status passed as query parameter
+            @RequestParam ConversationStatus status) {
+        return ResponseEntity.ok(supportConversationService.updateConversationStatus(id, status));
     }
 
 }

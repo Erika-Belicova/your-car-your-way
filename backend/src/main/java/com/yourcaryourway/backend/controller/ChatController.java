@@ -35,8 +35,8 @@ public class ChatController {
     @Operation(summary = "Update conversation status",
             description = "Updates the status of a support conversation and notifies all participants.")
     @MessageMapping("/chat/status")
-    public void updateStatus(@Payload ChatStatusUpdateDTO statusUpdateDTO, Authentication authentication) {
-        chatService.updateStatus(statusUpdateDTO, authentication);
+    public void updateStatus(@Payload ChatStatusUpdateDTO statusUpdateDTO) {
+        chatService.updateStatus(statusUpdateDTO);
     }
 
 }

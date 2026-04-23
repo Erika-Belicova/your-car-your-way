@@ -5,11 +5,9 @@ import lombok.Getter;
 @Getter
 public enum ChatTimeoutNotification {
 
-    WAITING_FOR_AGENT("Waiting for a support agent to connect to the conversation."),
     AGENTS_BUSY("Our agents are currently helping other customers, wait in the queue or contact support at a later time."),
     ALL_AGENTS_OCCUPIED("We are sorry, all our agents are occupied at this time. Please contact support at a later time."),
     AGENT_VERIFYING("The support agent is verifying information, they will be with you shortly."),
-    CHAT_TIMED_OUT("The current support chat has timed out due to inactivity."),
     AGENT_UNABLE("The support agent was unable to retrieve the information needed to assist you at this time. " +
             "Please start a new chat session later and our team will do their best to assist you.");
 

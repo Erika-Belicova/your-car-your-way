@@ -1,9 +1,7 @@
 package com.yourcaryourway.backend.service.chat;
 
-import com.yourcaryourway.backend.enumeration.ChatTimeoutNotification;
 import com.yourcaryourway.backend.enumeration.ConversationStatus;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -36,10 +34,6 @@ public class ChatTimeoutScheduler {
 
     // schedule timeout checks when a conversation is created (OPEN status)
     public void scheduleOpenTimeouts(UUID chatSessionId) {
-        // notify user that they are waiting for an agent to join
-        chatNotificationService.broadcastSystemNotification(
-                chatSessionId, ChatTimeoutNotification.WAITING_FOR_AGENT.getMessage());
-
         // 5 min - notify user that agents are busy
         taskScheduler.schedule(() -> chatTimeoutService.handleOpenFiveMinuteTimeout(chatSessionId),
                 Instant.now().plus(Duration.ofMinutes(5)));
@@ -53,9 +47,6 @@ public class ChatTimeoutScheduler {
     public void scheduleActiveTimeouts(UUID chatSessionId) {
         // schedule agent inactivity check - triggered when user sends a message
         scheduleAgentInactivityTimeout(chatSessionId);
-        // schedule user inactivity check - triggered when agent sends a message
-        // temporarily disabled - agent is responsible for closing the conversation
-        // scheduleUserInactivityTimeout(chatSessionId);
     }
 
     // 5 min - notify user that agents are busy
@@ -66,15 +57,6 @@ public class ChatTimeoutScheduler {
                 () -> chatTimeoutService.handleAgentInactivityTimeout(chatSessionId),
                 Instant.now().plus(Duration.ofMinutes(5)));
         scheduledTasks.put(chatSessionId + "_agent", future);
-    }
-
-    // 15 min - check if user has responded, if not auto-close conversation due to inactivity
-    public void scheduleUserInactivityTimeout(UUID chatSessionId) {
-        cancelTask(chatSessionId + "_user");
-        ScheduledFuture<?> future = taskScheduler.schedule(
-                () -> chatTimeoutService.handleUserInactivityTimeout(chatSessionId),
-                Instant.now().plus(Duration.ofMinutes(15)));
-        scheduledTasks.put(chatSessionId + "_user", future);
     }
 
     private void cancelTask(String key) {
@@ -93,14 +75,14 @@ public class ChatTimeoutScheduler {
 
     // schedule timeout checks and broadcast notification after a status update
     public void handlePostStatusUpdate(UUID chatSessionId, ConversationStatus previousStatus,
-                                       ConversationStatus newStatus, Authentication authentication) {
+                                       ConversationStatus newStatus) {
         if (newStatus == ConversationStatus.ACTIVE) {
             scheduleActiveTimeouts(chatSessionId);
         } else if (newStatus == ConversationStatus.WAITING) {
             scheduleWaitingTimeout(chatSessionId);
         }
         chatNotificationService.broadcastStatusNotification(
-                chatSessionId, previousStatus, newStatus, authentication);
+                chatSessionId, previousStatus, newStatus);
     }
 
 }
