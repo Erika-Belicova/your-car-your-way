@@ -33,7 +33,9 @@
 
 .detail-data {
   display: flex;
-  gap: 1.5rem;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
   border-top: 1px solid #c4c4d8;
   padding-top: 0.75rem;
   margin-top: 0.5rem;
@@ -58,6 +60,11 @@ h2 {
   color: #305FC7;
   text-transform: uppercase;
   letter-spacing: 0.05rem;
+}
+
+.conversation-date {
+  font-size: 0.8rem;
+  color: #2D2D31;
 }
 
 .chat-window {
@@ -203,11 +210,6 @@ h2 {
 .error-message {
   font-size: 0.8rem;
   color: #E02B0B;
-}
-
-.conversation-date {
-  font-size: 0.8rem;
-  color: #2D2D31;
 }
 
 .message-header {

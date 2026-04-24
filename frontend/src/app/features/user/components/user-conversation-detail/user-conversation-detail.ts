@@ -61,7 +61,7 @@ export class UserConversationDetail implements OnInit, OnDestroy {
       },
       error: () => {
         this.isLoading = false;
-        this.errorMessage = 'Failed to load conversation. Please try again.';
+        this.errorMessage = 'This support conversation could not be found or is no longer available.';
         this.cdr.detectChanges();
       }
     });
@@ -117,6 +117,10 @@ export class UserConversationDetail implements OnInit, OnDestroy {
     // update conversation status if notification contains a status change
     if (notification.status && this.conversation) {
       this.conversation.status = notification.status;
+    }
+    // update status updated timestamp if notification contains it
+    if (notification.updatedAt && this.conversation) {
+      this.conversation.updated_at = notification.updatedAt;
     }
     this.scrollToBottom();
     this.cdr.detectChanges();

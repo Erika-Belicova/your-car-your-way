@@ -20,28 +20,32 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/user/components/user-dashboard/user-dashboard')
         .then(m => m.UserDashboard),
-    canActivate: [authGuard]
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'ROLE_USER' }
   },
   {
     path: 'support-conversations',
     loadComponent: () =>
       import('./features/user/components/user-conversation-list/user-conversation-list')
         .then(m => m.UserConversationList),
-    canActivate: [authGuard]
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'ROLE_USER' }
   },
   {
     path: 'support-conversations/new',
     loadComponent: () =>
       import('./features/user/components/user-conversation-form/user-conversation-form')
         .then(m => m.UserConversationForm),
-    canActivate: [authGuard]
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'ROLE_USER' }
   },
   {
     path: 'support-conversations/:id',
     loadComponent: () =>
       import('./features/user/components/user-conversation-detail/user-conversation-detail')
         .then(m => m.UserConversationDetail),
-    canActivate: [authGuard]
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'ROLE_USER' }
   },
 
   // support agent protected routes

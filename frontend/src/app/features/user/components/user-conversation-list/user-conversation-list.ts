@@ -38,9 +38,12 @@ export class UserConversationList implements OnInit {
     });
   }
 
-  // filter conversations by status
+  // filter conversations by status sorted by most recently updated
   private getByStatus(status: ConversationStatus): SupportConversationResponseDTO[] {
-    return this.conversations.filter(c => c.status === status);
+    return this.conversations
+      .filter(c => c.status === status)
+      // the most recently updated conversation is on top of each category
+      .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
   }
 
   // check if user has no conversations at all

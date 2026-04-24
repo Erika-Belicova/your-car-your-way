@@ -22,7 +22,7 @@
     <div class="status-card">
       <h3>Open</h3>
       <p class="status-description">New conversation requests waiting for a support agent to connect. 
-        <br>Unanswered conversations automatically move to Waiting after 5 minutes.</p>
+        <br>Unanswered conversations automatically close after 15 minutes.</p>
       @for (conversation of openConversations; track conversation.id) {
         <div class="conversation-item" (click)="openConversation(conversation.id)">
           <span class="conversation-subject">Subject: {{ conversation.subject }}</span>

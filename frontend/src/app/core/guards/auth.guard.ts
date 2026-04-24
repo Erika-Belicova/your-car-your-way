@@ -5,6 +5,7 @@ import { UserService } from '../../features/user/services/user.service';
 import { catchError, map, of } from 'rxjs';
 
 export const authGuard: CanActivateFn = () => {
+
   const tokenService = inject(TokenService);
   const userService = inject(UserService);
   const router = inject(Router);
@@ -19,4 +20,5 @@ export const authGuard: CanActivateFn = () => {
     map(() => true),
     catchError(() => of(router.createUrlTree(['/login'])))
   );
+  
 };
