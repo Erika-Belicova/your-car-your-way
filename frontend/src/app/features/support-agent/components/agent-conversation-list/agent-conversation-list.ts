@@ -116,38 +116,4 @@ export class AgentConversationList implements OnInit, OnDestroy {
     );
   }
 
-  // activate chat - set status to active and navigate to detail
-  activateChat(id: number, event: Event): void {
-    event.stopPropagation();
-    this.conversationService.updateConversationStatus(id, ConversationStatus.ACTIVE).subscribe({
-      next: () => {
-        this.router.navigate(['/agent-access/support-conversations', id]);
-      },
-      error: () => {
-        this.errorMessage = 'Failed to start chat. Please try again.';
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  // resume chat - set status to active and navigate to detail
-  resumeChat(id: number, event: Event): void {
-    event.stopPropagation();
-    this.conversationService.updateConversationStatus(id, ConversationStatus.ACTIVE).subscribe({
-      next: () => {
-        this.router.navigate(['/agent-access/support-conversations', id]);
-      },
-      error: () => {
-        this.errorMessage = 'Failed to resume chat. Please try again.';
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  // continue chat - navigate to detail without status change
-  continueChat(id: number, event: Event): void {
-    event.stopPropagation();
-    this.router.navigate(['/agent-access/support-conversations', id]);
-  }
-
 }
