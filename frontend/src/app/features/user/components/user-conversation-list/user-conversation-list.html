@@ -3,7 +3,7 @@
   <div class="header-card">
     <button class="btn-back" (click)="goBack()">Back</button>
     <h2>My Support Conversations</h2>
-    <button class="btn-new" (click)="goToNewConversation()">New</button>
+    <button class="btn-refresh" (click)="refresh()">Refresh</button>
   </div>
 
   @if (isLoading) {
@@ -28,7 +28,7 @@
         <div class="conversation-item" (click)="openConversation(conversation.id)">
           <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
           <div class="conversation-data">
-            <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <span class="conversation-status">Status: {{ conversation.status }}</span>
           </div>
         </div>
@@ -44,7 +44,7 @@
         <div class="conversation-item" (click)="openConversation(conversation.id)">
           <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
           <div class="conversation-data">
-            <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <span class="conversation-status">Status: {{ conversation.status }}</span>
           </div>
         </div>
@@ -60,7 +60,7 @@
         <div class="conversation-item" (click)="openConversation(conversation.id)">
           <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
           <div class="conversation-data">
-            <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <span class="conversation-status">Status: {{ conversation.status }}</span>
           </div>
         </div>
@@ -76,7 +76,7 @@
         <div class="conversation-item" (click)="openConversation(conversation.id)">
           <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
           <div class="conversation-data">
-            <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <span class="conversation-status">Status: {{ conversation.status }}</span>
           </div>
         </div>

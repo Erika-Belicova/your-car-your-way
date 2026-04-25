@@ -21,9 +21,10 @@
 .header-card h2 {
   text-align: center;
   padding: 0rem 0.2rem;
+  margin-right: 1rem;
 }
 
-.header-card .btn-new {
+.header-card .btn-refresh {
   justify-self: end;
 }
 
@@ -111,25 +112,6 @@ h3 {
   color: #E02B0B;
 }
 
-.btn-new {
-  background-color: #E02B0B;
-  color: #FFFFFF;
-  border: 2px solid #E02B0B;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  border-radius: 4px;
-  height: 48px;
-  width: 100px;
-}
-
-.btn-new:hover {
-  background: none;
-  border: 2px solid #E02B0B;
-  color: #2D2D31;
-}
-
 .btn-back {
   background-color: #2D2D31;
   color: #FFFFFF;
@@ -146,5 +128,24 @@ h3 {
 .btn-back:hover {
   background: none;
   border: 2px solid #2D2D31;
+  color: #2D2D31;
+}
+
+.btn-refresh {
+  background-color: #305FC7;
+  color: #FFFFFF;
+  border: 2px solid #305FC7;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  border-radius: 4px;
+  height: 48px;
+  width: 130px;
+}
+
+.btn-refresh:hover {
+  background: none;
+  border: 2px solid #305FC7;
   color: #2D2D31;
 }

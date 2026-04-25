@@ -27,7 +27,7 @@
         <div class="conversation-item" (click)="openConversation(conversation.id)">
           <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
           <div class="conversation-data">
-            <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <div class="conversation-actions">
               <div class="status-dropdown">
                 <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
@@ -59,7 +59,7 @@
         <div class="conversation-item" (click)="openConversation(conversation.id)">
           <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
           <div class="conversation-data">
-            <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <div class="conversation-actions">
               <div class="status-dropdown">
                 <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
@@ -91,7 +91,7 @@
         <div class="conversation-item" (click)="openConversation(conversation.id)">
           <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
           <div class="conversation-data">
-            <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <div class="conversation-actions">
               <div class="status-dropdown">
                 <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
@@ -123,7 +123,7 @@
         <div class="conversation-item" (click)="openConversation(conversation.id)">
           <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
           <div class="conversation-data">
-            <span class="conversation-date">Last updated: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
             <div class="status-dropdown">
               <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
                 Status: {{ conversation.status }} ▾
