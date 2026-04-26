@@ -13,8 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Service responsible for handling chat session timeout logic.
@@ -27,6 +30,9 @@ public class ChatTimeoutService {
     private final SupportConversationRepository supportConversationRepository;
     private final SupportMessageRepository supportMessageRepository;
     private final ChatNotificationService chatNotificationService;
+
+    // local timeout task map to avoid circular dependency with ChatTimeoutScheduler
+    private final Map<String, ScheduledFuture<?>> localScheduledTasks = new ConcurrentHashMap<>();
 
     public ChatTimeoutService(TaskScheduler taskScheduler,
                               SupportConversationRepository supportConversationRepository,
@@ -88,11 +94,32 @@ public class ChatTimeoutService {
         conversation.setStatus(ConversationStatus.WAITING);
         supportConversationRepository.save(conversation);
 
-        // calling taskScheduler directly to avoid circular dependency
-        taskScheduler.schedule(() -> handleWaitingTimeout(chatSessionId),
-                Instant.now().plus(Duration.ofMinutes(15)));
+        // calling local method to avoid circular dependency
+        scheduleLocalWaitingTimeout(chatSessionId);
         notifyStatusChange(chatSessionId, ConversationStatus.ACTIVE,
                 ConversationStatus.WAITING, ChatTimeoutNotification.AGENT_VERIFYING);
+    }
+
+    // cancel any existing waiting timeout and schedule a new one
+    private void scheduleLocalWaitingTimeout(UUID chatSessionId) {
+        // cancel any existing waiting timeout to prevent multiple closures
+        cancelLocalWaitingTimeout(chatSessionId);
+
+        // schedule a new 15 minute waiting timeout
+        ScheduledFuture<?> future = taskScheduler.schedule(
+                () -> handleWaitingTimeout(chatSessionId),
+                Instant.now().plus(Duration.ofMinutes(15)));
+        localScheduledTasks.put(chatSessionId + "_waiting_local", future);
+    }
+
+    // cancel the locally scheduled waiting timeout if it exists
+    void cancelLocalWaitingTimeout(UUID chatSessionId) {
+        String key = chatSessionId + "_waiting_local";
+        ScheduledFuture<?> existing = localScheduledTasks.get(key);
+        if (existing != null) {
+            existing.cancel(false);
+            localScheduledTasks.remove(key);
+        }
     }
 
     // auto-close if agent has not resumed within 15 minutes of pausing

@@ -35,21 +35,25 @@ public class ChatTimeoutScheduler {
     // schedule timeout checks when a conversation is created (OPEN status)
     public void scheduleOpenTimeouts(UUID chatSessionId) {
         // 5 min - notify user that agents are busy
-        taskScheduler.schedule(() -> chatTimeoutService.handleOpenFiveMinuteTimeout(chatSessionId),
+        ScheduledFuture<?> fiveMin = taskScheduler.schedule(
+                () -> chatTimeoutService.handleOpenFiveMinuteTimeout(chatSessionId),
                 Instant.now().plus(Duration.ofMinutes(5)));
+        scheduledTasks.put(chatSessionId + "_open_5", fiveMin);
 
         // 15 min - auto-close conversation if status is still OPEN and no response from support agent
-        taskScheduler.schedule(() -> chatTimeoutService.handleOpenFifteenMinuteTimeout(chatSessionId),
+        ScheduledFuture<?> fifteenMin = taskScheduler.schedule(
+                () -> chatTimeoutService.handleOpenFifteenMinuteTimeout(chatSessionId),
                 Instant.now().plus(Duration.ofMinutes(15)));
+        scheduledTasks.put(chatSessionId + "_open_15", fifteenMin);
     }
 
     // schedule timeout checks after a conversation becomes ACTIVE
     public void scheduleActiveTimeouts(UUID chatSessionId) {
-        // schedule agent inactivity check - triggered when user sends a message
+        // schedule initial agent inactivity check
         scheduleAgentInactivityTimeout(chatSessionId);
     }
 
-    // 5 min - notify user that agents are busy
+    // schedule agent inactivity check - resets on every user message
     public void scheduleAgentInactivityTimeout(UUID chatSessionId) {
         // cancel existing task if any
         cancelTask(chatSessionId + "_agent");
@@ -69,13 +73,29 @@ public class ChatTimeoutScheduler {
 
     // schedule waiting timeout when conversation is paused
     public void scheduleWaitingTimeout(UUID chatSessionId) {
-        taskScheduler.schedule(() -> chatTimeoutService.handleWaitingTimeout(chatSessionId),
+        ScheduledFuture<?> future = taskScheduler.schedule(
+                () -> chatTimeoutService.handleWaitingTimeout(chatSessionId),
                 Instant.now().plus(Duration.ofMinutes(15)));
+        scheduledTasks.put(chatSessionId + "_waiting", future);
+    }
+
+    // cancel all scheduled timeout tasks for a given conversation
+    private void cancelAllTimeouts(UUID chatSessionId) {
+        cancelTask(chatSessionId + "_open_5");
+        cancelTask(chatSessionId + "_open_15");
+        cancelTask(chatSessionId + "_waiting");
+        cancelTask(chatSessionId + "_agent");
+
+        // cancel the locally scheduled waiting timeout triggered by automatic agent inactivity
+        chatTimeoutService.cancelLocalWaitingTimeout(chatSessionId);
     }
 
     // schedule timeout checks and broadcast notification after a status update
     public void handlePostStatusUpdate(UUID chatSessionId, ConversationStatus previousStatus,
                                        ConversationStatus newStatus) {
+        // cancel all existing timeouts before scheduling new ones
+        cancelAllTimeouts(chatSessionId);
+
         switch (newStatus) {
             case ACTIVE -> scheduleActiveTimeouts(chatSessionId);
             case WAITING -> scheduleWaitingTimeout(chatSessionId);
