@@ -49,7 +49,7 @@ public class ChatTimeoutScheduler {
 
     // schedule timeout checks after a conversation becomes ACTIVE
     public void scheduleActiveTimeouts(UUID chatSessionId) {
-        // schedule agent inactivity check - triggered when user sends a message
+        // schedule initial agent inactivity check
         scheduleAgentInactivityTimeout(chatSessionId);
     }
 
@@ -85,6 +85,9 @@ public class ChatTimeoutScheduler {
         cancelTask(chatSessionId + "_open_15");
         cancelTask(chatSessionId + "_waiting");
         cancelTask(chatSessionId + "_agent");
+
+        // cancel the locally scheduled waiting timeout triggered by automatic agent inactivity
+        chatTimeoutService.cancelLocalWaitingTimeout(chatSessionId);
     }
 
     // schedule timeout checks and broadcast notification after a status update

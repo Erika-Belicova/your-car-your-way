@@ -102,20 +102,24 @@ public class ChatTimeoutService {
 
     // cancel any existing waiting timeout and schedule a new one
     private void scheduleLocalWaitingTimeout(UUID chatSessionId) {
-        String key = chatSessionId + "_waiting_local";
-
         // cancel any existing waiting timeout to prevent multiple closures
-        ScheduledFuture<?> existing = localScheduledTasks.get(key);
-        if (existing != null) {
-            existing.cancel(false);
-            localScheduledTasks.remove(key);
-        }
+        cancelLocalWaitingTimeout(chatSessionId);
 
         // schedule a new 15 minute waiting timeout
         ScheduledFuture<?> future = taskScheduler.schedule(
                 () -> handleWaitingTimeout(chatSessionId),
                 Instant.now().plus(Duration.ofMinutes(15)));
-        localScheduledTasks.put(key, future);
+        localScheduledTasks.put(chatSessionId + "_waiting_local", future);
+    }
+
+    // cancel the locally scheduled waiting timeout if it exists
+    void cancelLocalWaitingTimeout(UUID chatSessionId) {
+        String key = chatSessionId + "_waiting_local";
+        ScheduledFuture<?> existing = localScheduledTasks.get(key);
+        if (existing != null) {
+            existing.cancel(false);
+            localScheduledTasks.remove(key);
+        }
     }
 
     // auto-close if agent has not resumed within 15 minutes of pausing
