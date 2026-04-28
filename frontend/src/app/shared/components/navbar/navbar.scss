@@ -1,0 +1,81 @@
+nav {
+  display: flex;
+  align-items: stretch;
+  background-color: #FFFFFF;
+  padding: 0.5rem 1rem;
+  border-bottom: 3px solid #305FC7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav.agent-nav {
+  border-bottom-color: #E02B0B;
+}
+
+.navbar-logo {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-left: auto;
+  padding: 0 0.25rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.navbar-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+}
+
+.navbar-role {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #305FC7;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  padding-left: 0.05rem;
+}
+
+.navbar-role.agent {
+  color: #E02B0B;
+}
+
+.navbar-email {
+  font-size: 0.85rem;
+  color: #2D2D31;
+}
+
+button {
+  background-color: #305FC7;
+  color: #FFFFFF;
+  border: 2px solid #305FC7;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  border-radius: 4px;
+}
+
+button:hover {
+  background: none;
+  border: 2px solid #305FC7;
+  color: #2D2D31;
+}
+
+.agent-nav button {
+  border-color: #E02B0B;
+  background-color: #E02B0B;
+}
+
+.agent-nav button:hover {
+  background-color: #FFFFFF;
+  border: 2px solid #E02B0B;
+  color: #2D2D31;
+}

@@ -1,0 +1,66 @@
+<div class="detail-container">
+  <div class="detail-card">
+
+    @if (isLoading) {
+      <p>Loading...</p>
+    }
+
+    @if (errorMessage) {
+      <div class="error-message">{{ errorMessage }}</div>
+    }
+
+    @if (!isLoading && conversation) {
+
+      <div class="detail-header">
+        <div class="detail-header-top">
+          <button class="btn-back" (click)="goBack()">Back</button>
+          <h2>Subject: {{ conversation.subject }}</h2>
+        </div>
+        <div class="detail-data">
+          <span class="conversation-status">Status: {{ conversation.status }}</span>
+          <span class="conversation-date">
+            Created: <span class="date-value">{{ conversation.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+          </span>
+          <span class="conversation-date">
+            Status updated: <span class="date-value">{{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="chat-window" #chatWindow>
+
+        @for (item of chatItems; track $index) {
+          @if (isMessage(item)) {
+            <div class="message"
+                [class.message-user]="item.senderType === 'USER'"
+                [class.message-agent]="item.senderType === 'SUPPORT_AGENT'">
+              <div class="message-header">
+                <span class="message-sender">
+                  {{ item.senderType === 'USER' ? 'User' : 'Support Agent' }}
+                </span>
+                <span class="message-time">{{ item.sentAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+              <span class="message-content">{{ item.content }}</span>
+            </div>
+          } @else {
+            <div class="notification">{{ item.text }}</div>
+          }
+        }
+
+      </div>
+
+      <div class="chat-input">
+        <input
+          type="text"
+          [(ngModel)]="newMessage"
+          placeholder="Type a message..."
+          [disabled]="!isActive()"
+          (keydown.enter)="sendMessage()"
+        />
+        <button (click)="sendMessage()" [disabled]="!isActive()">Send</button>
+      </div>
+
+    }
+
+  </div>
+</div>

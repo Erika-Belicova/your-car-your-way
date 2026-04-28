@@ -1,0 +1,151 @@
+.list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+  padding: 2rem;
+  gap: 1.5rem;
+}
+
+.header-card {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 1rem 3rem;
+  width: 800px;
+  border: 1px solid #c4c4d8;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.header-card h2 {
+  text-align: center;
+  padding: 0rem 0.2rem;
+  margin-right: 1rem;
+}
+
+.header-card .btn-refresh {
+  justify-self: end;
+}
+
+.status-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem 3rem;
+  width: 800px;
+  border: 1px solid #c4c4d8;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #2D2D31;
+  margin: 0;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #305FC7;
+  margin: 0;
+  letter-spacing: 0.05rem;
+}
+
+.status-description {
+  font-size: 0.85rem;
+  color: #2D2D31;
+  margin: 0;
+}
+
+.conversation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid #c4c4d8;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.conversation-item:hover {
+  border-color: #305FC7;
+}
+
+.conversation-subject {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2D2D31;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.conversation-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.conversation-status {
+  font-size: 0.8rem;
+  color: #305FC7;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.conversation-date {
+  font-size: 0.8rem;
+  color: #2D2D31;
+}
+
+.empty-message {
+  font-size: 0.95rem;
+  color: #2D2D31;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.error-message {
+  font-size: 0.8rem;
+  color: #E02B0B;
+}
+
+.btn-back {
+  background-color: #2D2D31;
+  color: #FFFFFF;
+  border: 2px solid #2D2D31;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  border-radius: 4px;
+  height: 48px;
+  width: 100px;
+}
+
+.btn-back:hover {
+  background: none;
+  border: 2px solid #2D2D31;
+  color: #2D2D31;
+}
+
+.btn-refresh {
+  background-color: #305FC7;
+  color: #FFFFFF;
+  border: 2px solid #305FC7;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  border-radius: 4px;
+  height: 48px;
+  width: 130px;
+}
+
+.btn-refresh:hover {
+  background: none;
+  border: 2px solid #305FC7;
+  color: #2D2D31;
+}

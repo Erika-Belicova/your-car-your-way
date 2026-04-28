@@ -1,0 +1,147 @@
+<div class="list-container">
+
+  <div class="header-card">
+    <div></div>
+    <h2>Support Conversations</h2>
+    <button class="btn-refresh" (click)="refresh()">Refresh</button>
+  </div>
+
+  @if (isLoading) {
+    <p>Loading...</p>
+  }
+
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
+
+  @if (!isLoading && conversations.length === 0) {
+    <p class="empty-message">There are no support conversations yet.</p>
+  }
+
+  @if (!isLoading && openConversations.length > 0) {
+    <div class="status-card">
+      <h3>Open</h3>
+      <p class="status-description">New conversation requests waiting for a support agent to connect. 
+        <br>Unanswered conversations automatically close after 15 minutes.</p>
+      @for (conversation of openConversations; track conversation.id) {
+        <div class="conversation-item" (click)="openConversation(conversation.id)">
+          <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
+          <div class="conversation-data">
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <div class="conversation-actions">
+              <div class="status-dropdown">
+                <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
+                  Status: {{ conversation.status }} ▾
+                </button>
+                @if (openDropdownId === conversation.id) {
+                  <div class="dropdown-menu">
+                    @for (option of getStatusOptions(conversation.status); track option) {
+                      <div class="dropdown-item" (click)="updateStatus(conversation.id, option, $event)">
+                        {{ option }}
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (!isLoading && activeConversations.length > 0) {
+    <div class="status-card">
+      <h3>Active</h3>
+      <p class="status-description">Ongoing conversations with a connected user.
+        Conversations without a response from the agent automatically move to Waiting after 5 minutes.</p>
+      @for (conversation of activeConversations; track conversation.id) {
+        <div class="conversation-item" (click)="openConversation(conversation.id)">
+          <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
+          <div class="conversation-data">
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <div class="conversation-actions">
+              <div class="status-dropdown">
+                <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
+                  Status: {{ conversation.status }} ▾
+                </button>
+                @if (openDropdownId === conversation.id) {
+                  <div class="dropdown-menu">
+                    @for (option of getStatusOptions(conversation.status); track option) {
+                      <div class="dropdown-item" (click)="updateStatus(conversation.id, option, $event)">
+                        {{ option }}
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (!isLoading && waitingConversations.length > 0) {
+    <div class="status-card">
+      <h3>Waiting</h3>
+      <p class="status-description">Support conversations temporarily paused until an agent resumes them.
+        <br>If not resumed within 15 minutes, the conversations are closed automatically.</p>
+      @for (conversation of waitingConversations; track conversation.id) {
+        <div class="conversation-item" (click)="openConversation(conversation.id)">
+          <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
+          <div class="conversation-data">
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <div class="conversation-actions">
+              <div class="status-dropdown">
+                <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
+                  Status: {{ conversation.status }} ▾
+                </button>
+                @if (openDropdownId === conversation.id) {
+                  <div class="dropdown-menu">
+                    @for (option of getStatusOptions(conversation.status); track option) {
+                      <div class="dropdown-item" (click)="updateStatus(conversation.id, option, $event)">
+                        {{ option }}
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (!isLoading && closedConversations.length > 0) {
+    <div class="status-card">
+      <h3>Closed</h3>
+      <p class="status-description">A complete message history of resolved support conversations. 
+        If necessary, support conversations can be reactivated via the status dropdown.</p>
+      @for (conversation of closedConversations; track conversation.id) {
+        <div class="conversation-item" (click)="openConversation(conversation.id)">
+          <span class="conversation-subject">Subject: {{ conversation.subject }}</span>
+          <div class="conversation-data">
+            <span class="conversation-date">Last status update: {{ conversation.updated_at | date:'dd/MM/yyyy HH:mm' }}</span>
+            <div class="status-dropdown">
+              <button class="btn-status" (click)="toggleDropdown(conversation.id, $event)">
+                Status: {{ conversation.status }} ▾
+              </button>
+              @if (openDropdownId === conversation.id) {
+                <div class="dropdown-menu">
+                  @for (option of getStatusOptions(conversation.status); track option) {
+                    <div class="dropdown-item" (click)="updateStatus(conversation.id, option, $event)">
+                      {{ option }}
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>
